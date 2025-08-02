@@ -21,3 +21,7 @@ impl AppSystems {
         )
     }
 }
+
+/// A system set for systems that shouldn't run while the game is paused.
+#[derive(SystemSet, Copy, Clone, Eq, PartialEq, Hash, Debug)]
+pub struct AppPausableSystems;

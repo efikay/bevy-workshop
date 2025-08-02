@@ -4,7 +4,7 @@ use bevy::{
     window::{CursorOptions, WindowMode},
 };
 
-use crate::shared::AppSystems;
+use crate::shared::{AppPausableSystems, AppPauseState, AppSystems};
 
 // Base plugin collection. Used to configure default plugins and prepare the game
 pub struct BasePlugins;
@@ -16,22 +16,31 @@ impl Plugin for BasePlugins {
                 .set(Self::window_plugin()),
         );
 
+        // Order new `AppSystems` variants by adding them here:
         app.configure_sets(Update, AppSystems::system_set());
 
-        Self::spawn_camera(app);
-        Self::set_clear_color(app, Color::srgb_u8(52, 29, 90));
+        // Set up the `Pause` state.
+        app.init_state::<AppPauseState>();
+        app.configure_sets(
+            Update,
+            AppPausableSystems.run_if(in_state(AppPauseState(false))),
+        );
+
+        app.add_systems(Startup, Self::spawn_camera);
+
+        Self::set_clear_color(app);
     }
 }
 
 impl BasePlugins {
-    fn set_clear_color(app: &mut App, color: Color) {
-        app.insert_resource(ClearColor(color));
+    const CLEAR_COLOR: Color = Color::srgb_u8(52, 29, 90);
+
+    fn set_clear_color(app: &mut App) {
+        app.insert_resource(ClearColor(Self::CLEAR_COLOR));
     }
 
-    fn spawn_camera(app: &mut App) {
-        let world = app.world_mut();
-
-        world.commands().spawn(Camera2d);
+    fn spawn_camera(mut commands: Commands) {
+        commands.spawn(Camera2d);
     }
 
     fn asset_plugin() -> AssetPlugin {
