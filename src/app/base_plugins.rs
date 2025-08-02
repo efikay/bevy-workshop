@@ -17,7 +17,7 @@ impl Plugin for BasePlugins {
         );
 
         // Order new `AppSystems` variants by adding them here:
-        app.configure_sets(Update, AppSystems::system_set());
+        app.configure_sets(Update, AppSystems::system_set().chain());
 
         // Set up the `Pause` state.
         app.init_state::<AppPauseState>();
