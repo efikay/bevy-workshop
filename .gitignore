@@ -1,0 +1,9 @@
+/target
+
+/.vscode
+/.idea
+
+.DS_Store
+
+# At least for now
+/assets
