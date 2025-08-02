@@ -4,6 +4,8 @@ use bevy::{
     window::{CursorOptions, WindowMode},
 };
 
+use crate::shared::AppSystems;
+
 // Base plugin collection. Used to configure default plugins and prepare the game
 pub struct BasePlugins;
 impl Plugin for BasePlugins {
@@ -13,6 +15,8 @@ impl Plugin for BasePlugins {
                 .set(Self::asset_plugin())
                 .set(Self::window_plugin()),
         );
+
+        app.configure_sets(Update, AppSystems::system_set());
 
         Self::spawn_camera(app);
         Self::set_clear_color(app, Color::srgb_u8(52, 29, 90));
