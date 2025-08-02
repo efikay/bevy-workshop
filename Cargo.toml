@@ -4,7 +4,13 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+# ECS-driven game engine (and also it's awesome btw)
 bevy = { version = "0.16.1", features = ["dynamic_linking"] }
+
+# Better enums
+strum = "0.27"
+strum_macros = "0.27"
+
 
 [features]
 default = ["dev_native"]
