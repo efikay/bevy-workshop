@@ -3,7 +3,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    menus::menu_states::MenuState, screens::ScreenState, shared::asset_tracking::ResourceHandles,
+    menus::state::MenuState, screens::ScreenState, shared::asset_tracking::ResourceHandles,
     ui_kit::widget,
 };
 

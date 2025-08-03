@@ -1,6 +1,6 @@
 use bevy::{prelude::*, ui::Val::*};
 
-use crate::{menus::MenuState, shared::AppPauseState};
+use crate::{menus::state::MenuState, shared::AppPauseState};
 
 pub(super) fn unpause(mut next_pause: ResMut<NextState<AppPauseState>>) {
     next_pause.set(AppPauseState(false));

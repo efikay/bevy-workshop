@@ -1,9 +1,9 @@
-mod screen_states;
+mod state;
 mod gameplay_screen;
 
 use bevy::prelude::*;
 
-pub use screen_states::ScreenState;
+pub use state::ScreenState;
 
 pub fn plugin(app: &mut App) {
     app.init_state::<ScreenState>();

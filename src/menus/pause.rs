@@ -2,7 +2,8 @@
 
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
 
-use crate::{menus::MenuState, screens::ScreenState, ui_kit::widget};
+use super::state::MenuState;
+use crate::{screens::ScreenState, ui_kit::widget};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(MenuState::Pause), spawn_pause_menu);

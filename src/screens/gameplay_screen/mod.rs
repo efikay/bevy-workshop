@@ -1,6 +1,6 @@
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
 
-use crate::{menus::MenuState, scenes::player_scene::level, screens::ScreenState};
+use crate::{menus::state::MenuState, scenes::player_scene::level, screens::ScreenState};
 use systems::*;
 
 mod systems;

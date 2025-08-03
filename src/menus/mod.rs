@@ -1,15 +1,14 @@
 //! The game's menus and transitions between them.
+use bevy::prelude::*;
 
 mod main;
-mod menu_states;
 mod pause;
 mod settings;
 
-use bevy::prelude::*;
-pub use menu_states::*;
+pub mod state;
 
 pub(super) fn plugin(app: &mut App) {
-    app.init_state::<MenuState>();
+    app.init_state::<state::MenuState>();
 
     app.add_plugins((main::plugin, settings::plugin, pause::plugin));
 }
