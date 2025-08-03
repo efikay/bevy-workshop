@@ -4,7 +4,7 @@ use bevy::{
     window::{CursorOptions, WindowMode},
 };
 
-use crate::shared::{AppPausableSystems, AppPauseState, AppSystems};
+use crate::shared::{PausableAppSystems, AppPauseState, AppSystems};
 
 // Base plugin collection. Used to configure default plugins and prepare the game
 pub struct BasePlugins;
@@ -23,7 +23,7 @@ impl Plugin for BasePlugins {
         app.init_state::<AppPauseState>();
         app.configure_sets(
             Update,
-            AppPausableSystems.run_if(in_state(AppPauseState(false))),
+            PausableAppSystems.run_if(in_state(AppPauseState(false))),
         );
 
         app.add_systems(Startup, Self::spawn_camera);
