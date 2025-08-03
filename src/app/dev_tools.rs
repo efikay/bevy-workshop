@@ -15,7 +15,7 @@ pub(super) fn plugin(app: &mut App) {
     // Toggle the debug overlay for UI.
     app.add_systems(
         Update,
-        toggle_debug_ui.run_if(input_just_pressed(KeyCode::Delete)),
+        toggle_debug_ui.run_if(input_just_pressed(TOGGLE_KEY)),
     );
 }
 
