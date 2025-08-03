@@ -11,6 +11,8 @@ mod screens;
 mod shared;
 mod ui_kit;
 mod scenes;
+mod features;
+mod components;
 
 fn main() -> AppExit {
     App::new().add_plugins(app::AppPlugin).run()
