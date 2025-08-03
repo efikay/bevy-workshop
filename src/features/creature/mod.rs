@@ -2,12 +2,10 @@
 
 use bevy::prelude::*;
 
-mod assets;
 mod bundles;
+mod assets;
 mod marker;
 mod systems;
-
-pub use bundles::CreatureBundler;
 
 use crate::components::movement::MovementPlugin;
 

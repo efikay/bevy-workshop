@@ -1,5 +1,5 @@
 mod animation_state;
-mod controller;
+mod component;
 
 pub use animation_state::AnimationState;
-pub use controller::AnimationController;
+pub use component::Animation;

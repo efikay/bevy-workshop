@@ -6,14 +6,14 @@ use bevy::prelude::*;
 /// 
 /// Does not interact with other stuff except Bevy's Transform
 #[derive(Component)]
-pub struct MovementController {
+pub struct Movement {
     pub intent: Vec2,
     pub max_speed: f32,
 }
-impl MovementController {
+impl Movement {
     const DEFAULT_MAX_SPEED: f32 = 400.;
 }
-impl Default for MovementController {
+impl Default for Movement {
     fn default() -> Self {
         Self {
             intent: Vec2::ZERO,
@@ -21,7 +21,7 @@ impl Default for MovementController {
         }
     }
 }
-impl MovementController {
+impl Movement {
     pub fn new(max_speed: f32) -> Self {
         Self {
             max_speed,

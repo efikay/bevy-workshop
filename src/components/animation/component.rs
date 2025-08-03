@@ -1,27 +1,25 @@
-#![allow(dead_code)]
-
 use std::time::Duration;
 
 use bevy::prelude::*;
 
-use crate::shared::data_structures::IterableRangeGrid;
+use crate::shared::data_structures::RangeDoubleMapper;
 use crate::shared::direction::DirectionSimple;
 
 use super::animation_state::AnimationState;
 
 #[derive(Component, Debug)]
-pub struct AnimationController {
+pub struct Animation {
     timer: Timer,
-    frame_grid: IterableRangeGrid<AnimationState, DirectionSimple>,
+    frame_grid: RangeDoubleMapper<AnimationState, DirectionSimple>,
 }
-impl AnimationController {
+impl Animation {
     // TODO: Move from constant to struct field
     // TODO: Make configurable for each animation
     const ANIMATION_INTERVAL: Duration = Duration::from_millis(200);
     // TODO: Move from constant to struct field
     const KEEP_DIRECTION_ON_IDLE: bool = true;
 
-    pub fn new(frame_grid: IterableRangeGrid<AnimationState, DirectionSimple>) -> Self {
+    pub fn new(frame_grid: RangeDoubleMapper<AnimationState, DirectionSimple>) -> Self {
         Self {
             timer: Timer::new(Self::ANIMATION_INTERVAL, TimerMode::Repeating),
             frame_grid,

@@ -1,10 +1,9 @@
 use bevy::prelude::*;
 
-mod controller;
-mod plugin;
+mod component;
 mod system;
 
-pub use controller::MovementController;
+pub use component::Movement;
 
 pub struct MovementPlugin;
 impl Plugin for MovementPlugin {

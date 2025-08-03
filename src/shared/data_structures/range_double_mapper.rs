@@ -4,14 +4,14 @@ use core::hash::Hash;
 use std::{collections::HashMap, ops::Range};
 
 #[derive(Debug)]
-pub struct IterableRangeGrid<KOuter, KInner> {
+pub struct RangeDoubleMapper<KOuter, KInner> {
     grid_fn: fn(outer_key: &KOuter) -> fn(inner_fn: &KInner) -> Range<u8>,
 
     outer_key: KOuter,
     inner_key: KInner,
     cursor: u8,
 }
-impl<KOuter, KInner> IterableRangeGrid<KOuter, KInner>
+impl<KOuter, KInner> RangeDoubleMapper<KOuter, KInner>
 where
     KOuter: PartialEq + Default + Copy,
     KInner: PartialEq + Default + Copy,

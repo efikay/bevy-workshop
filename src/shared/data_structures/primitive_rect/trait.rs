@@ -1,3 +1,6 @@
+// Lint does not recognize that trait actually being used
+#![allow(dead_code)]
+
 use bevy::prelude::*;
 use ndarray::Array2;
 

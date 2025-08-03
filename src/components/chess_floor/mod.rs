@@ -1,5 +1,4 @@
-mod bundler;
-mod component;
-mod systems;
+mod bundles;
+mod config;
 
-pub use bundler::ChessFloorBundler;
+pub use bundles::make_sprite_bundles;

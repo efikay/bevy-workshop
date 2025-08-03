@@ -23,7 +23,3 @@ pub fn has_fract(value: f32) -> bool {
 pub fn is_zero(value: f32) -> bool {
     value.abs() < f32::EPSILON
 }
-
-
-
-

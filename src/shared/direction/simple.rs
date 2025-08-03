@@ -3,12 +3,6 @@ use bevy::math::Vec2;
 use super::utils::vec2_to_normalized_degrees;
 use super::advanced::DirectionAdvanced;
 
-#[derive(Debug, PartialEq, Eq)]
-pub enum DirectionConvertError {
-    /// Lossy conversion. With +45deg rotated version to closest match
-    Lossy(DirectionSimple),
-}
-
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Default, Hash)]
 pub enum DirectionSimple {
     North,

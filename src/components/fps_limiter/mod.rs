@@ -1,12 +1,26 @@
 #![allow(unused_imports)]
 
-mod bundler;
+use bevy::{input::common_conditions::input_just_pressed, prelude::*};
+use bevy_framepace::FramepacePlugin;
+
+mod bundle;
 mod config;
 mod marker;
-mod plugin;
 mod resource;
 mod systems;
 
 pub use marker::FpsLimiterText;
-pub use plugin::FpsLimiterPlugin;
-pub use systems::FpsLimiterSystems;
+
+pub fn plugin(app: &mut App) {
+    app.add_plugins(FramepacePlugin);
+
+    app.init_resource::<resource::FpsLimiter>();
+
+    app.add_systems(Startup, (systems::setup, systems::update_text).chain());
+    app.add_systems(
+        Update,
+        ((systems::next_fps_limit, systems::update_text)
+            .chain()
+            .run_if(input_just_pressed(KeyCode::KeyF)),),
+    );
+}

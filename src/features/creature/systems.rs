@@ -3,11 +3,11 @@
 use bevy::{input::gamepad::GamepadEvent, prelude::*};
 
 use super::marker::Creature;
-use crate::components::chess_floor::{self, ChessFloorBundler};
+use crate::components::chess_floor::make_sprite_bundles;
 use crate::shared::z_levels::ZLevel;
 use crate::{
-    components::{animation::AnimationController, movement::MovementController},
-    features::creature::CreatureBundler,
+    components::{animation::Animation, movement::Movement},
+    features::creature::bundles::player_bundle,
 };
 
 pub fn debug_spawn_player(
@@ -15,24 +15,22 @@ pub fn debug_spawn_player(
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
-    commands.spawn(CreatureBundler::player_bundle(
+    commands.spawn(player_bundle(
         asset_server.clone(),
         &mut texture_atlas_layouts,
     ));
 }
 
 pub fn debug_camera_seek_player(
-    mut camera_query: Query<(&mut Transform, &Camera2d), (With<Camera2d>, Without<Creature>)>,
+    mut camera_transform: Single<&mut Transform, (With<Camera2d>, Without<Creature>)>,
     player_transform: Single<&Transform, (With<Creature>, Without<Camera2d>)>,
 ) {
-    for (mut camera_transform, camera) in &mut camera_query {
-        camera_transform.translation = player_transform.translation.clone();
-    }
+    camera_transform.translation = player_transform.translation.clone();
 }
 
 pub fn record_creature_wasd_input(
     input: Res<ButtonInput<KeyCode>>,
-    mut controller_query: Query<&mut MovementController, With<Creature>>,
+    mut controller_query: Query<&mut Movement, With<Creature>>,
 ) {
     // Collect directional input.
     let mut intent = Vec2::ZERO;
@@ -61,7 +59,7 @@ pub fn record_creature_wasd_input(
 
 pub fn tick_creature_animation_timer(
     time: Res<Time>,
-    mut query: Query<&mut AnimationController, With<Creature>>,
+    mut query: Query<&mut Animation, With<Creature>>,
 ) {
     for mut animation in &mut query {
         animation.update_timer(time.delta());
@@ -69,7 +67,7 @@ pub fn tick_creature_animation_timer(
 }
 
 pub fn update_creature_sprite_animation(
-    mut query: Query<(&AnimationController, &mut Sprite), With<Creature>>,
+    mut query: Query<(&Animation, &mut Sprite), With<Creature>>,
 ) {
     for (animation, mut sprite) in &mut query {
         // Is switched to next frame. Syncing with atlas frame
@@ -82,10 +80,7 @@ pub fn update_creature_sprite_animation(
 }
 
 pub fn update_creature_animation_state(
-    mut player_query: Query<
-        (&MovementController, &mut Sprite, &mut AnimationController),
-        With<Creature>,
-    >,
+    mut player_query: Query<(&Movement, &mut Sprite, &mut Animation), With<Creature>>,
 ) {
     for (controller, mut _sprite, mut animation) in &mut player_query {
         // TODO make configurable flips
