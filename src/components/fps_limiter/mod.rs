@@ -1,4 +1,4 @@
-#![allow(unused_imports)]
+#![allow(dead_code)]
 
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
 use bevy_framepace::FramepacePlugin;
