@@ -40,7 +40,7 @@ pub fn spawn_level(
 ) {
     for sprite_bundle in
         chess_floor::bundles::make_sprite_bundles(chess_floor::config::ChessFloorConfig {
-            area: Rect::from_center_size(Vec2::ZERO, Vec2::new(1000.0, 1000.0)),
+            area: Rect::from_center_size(Vec2::ZERO, Vec2::new(2000.0, 2000.0)),
             tile_size: 20.0,
             ..Default::default()
         })
@@ -54,16 +54,20 @@ pub fn spawn_level(
         &mut texture_atlas_layouts,
     ));
 
-    let npc_area = Rect::from_corners(Vec2::new(-5000.0, -5000.0), Vec2::new(5000.0, 5000.0));
-    for spawn_area in PrimitiveRect::new(npc_area.min.into(), npc_area.max.into())
-        .chunk_to_grid(Vec2::new(400.0, 400.0))
+
+
+    let npcs_area = Rect::from_corners(Vec2::new(-3000.0, -3000.0), Vec2::new(5000.0, 5000.0));
+    let npc_chunk = Vec2::new(200.0, 200.0);
+
+    for spawn_area in PrimitiveRect::new(npcs_area.min.into(), npcs_area.max.into())
+        .chunk_to_grid(npc_chunk)
     {
-        let position = spawn_area.max() - spawn_area.min();
+        let center = spawn_area.max() - (npc_chunk / 2.0);
 
         commands.spawn(creature::npc_bundle(
             asset_server.clone(),
             &mut texture_atlas_layouts,
-            position,
+            center,
         ));
     }
 
