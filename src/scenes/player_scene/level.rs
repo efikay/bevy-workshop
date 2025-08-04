@@ -2,7 +2,12 @@
 
 use bevy::prelude::*;
 
-use crate::{components::chess_floor, features::creature, screens::ScreenState};
+use crate::{
+    components::chess_floor,
+    features::creature,
+    screens::ScreenState,
+    shared::data_structures::{ChunkToGrid, PrimitiveRect},
+};
 
 pub(super) fn plugin(_: &mut App) {
     // app.register_type::<LevelAssets>();
@@ -48,6 +53,19 @@ pub fn spawn_level(
         asset_server.clone(),
         &mut texture_atlas_layouts,
     ));
+
+    let npc_area = Rect::from_corners(Vec2::new(-5000.0, -5000.0), Vec2::new(5000.0, 5000.0));
+    for spawn_area in PrimitiveRect::new(npc_area.min.into(), npc_area.max.into())
+        .chunk_to_grid(Vec2::new(400.0, 400.0))
+    {
+        let position = spawn_area.max() - spawn_area.min();
+
+        commands.spawn(creature::npc_bundle(
+            asset_server.clone(),
+            &mut texture_atlas_layouts,
+            position,
+        ));
+    }
 
     commands.spawn((
         Name::new("Level"),

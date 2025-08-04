@@ -3,26 +3,17 @@
 use bevy::{input::gamepad::GamepadEvent, prelude::*};
 
 use super::markers::Creature;
+use crate::features::creature::bundles::npc_bundle;
+use crate::shared::data_structures::{ChunkToGrid, PrimitiveRect};
 use crate::shared::z_levels::ZLevel;
 use crate::{
     components::{animation::Animation, movement::Movement},
     features::creature::bundles::player_bundle,
 };
 
-pub fn spawn_player(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
-) {
-    commands.spawn(player_bundle(
-        asset_server.clone(),
-        &mut texture_atlas_layouts,
-    ));
-}
-
 pub fn record_creature_wasd_input(
     input: Res<ButtonInput<KeyCode>>,
-    mut controller_query: Query<&mut Movement, With<Creature>>,
+    mut creature_query: Query<(&mut Movement, &Creature)>,
 ) {
     // Collect directional input.
     let mut intent = Vec2::ZERO;
@@ -44,8 +35,10 @@ pub fn record_creature_wasd_input(
     let intent = intent.normalize_or_zero();
 
     // Apply movement intent to controllers.
-    for mut controller in &mut controller_query {
-        controller.intent = intent;
+    for (mut movement, creature) in &mut creature_query {
+        if creature.is_controlled {
+            movement.intent = intent;
+        }
     }
 }
 
@@ -74,13 +67,7 @@ pub fn update_creature_sprite_animation(
 pub fn update_creature_animation_state(
     mut player_query: Query<(&Movement, &mut Sprite, &mut Animation), With<Creature>>,
 ) {
-    for (controller, mut _sprite, mut animation) in &mut player_query {
-        // TODO make configurable flips
-        // let dx = controller.intent.x;
-        // if dx != 0.0 {
-        // sprite.flip_x = dx < 0.0;
-        // }
-
-        animation.update_from_point(controller.intent);
+    for (movement, mut _sprite, mut animation) in &mut player_query {
+        animation.update_from_point(movement.intent);
     }
 }

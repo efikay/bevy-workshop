@@ -12,7 +12,7 @@ use crate::{
     components::{camera_targeting, movement},
     shared::{AppSystems, PausableAppSystems},
 };
-pub use bundles::player_bundle;
+pub use bundles::*;
 
 pub fn plugin(app: &mut App) {
     app.add_plugins(movement::plugin);
