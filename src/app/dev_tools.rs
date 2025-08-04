@@ -4,13 +4,13 @@ use bevy::{
     dev_tools::states::log_transitions, input::common_conditions::input_just_pressed, prelude::*,
 };
 
-use crate::screens::ScreenState;
+use crate::{screens::ScreenState, shared::AppPauseState};
 
-const TOGGLE_KEY: KeyCode = KeyCode::Delete;
+const TOGGLE_KEY: KeyCode = KeyCode::KeyZ;
 
 pub(super) fn plugin(app: &mut App) {
-    // Log `Screen` state transitions.
     app.add_systems(Update, log_transitions::<ScreenState>);
+    app.add_systems(Update, log_transitions::<AppPauseState>);
 
     // Toggle the debug overlay for UI.
     app.add_systems(

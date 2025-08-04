@@ -2,15 +2,14 @@
 
 use bevy::{input::gamepad::GamepadEvent, prelude::*};
 
-use super::marker::Creature;
-use crate::components::chess_floor::make_sprite_bundles;
+use super::markers::Creature;
 use crate::shared::z_levels::ZLevel;
 use crate::{
     components::{animation::Animation, movement::Movement},
     features::creature::bundles::player_bundle,
 };
 
-pub fn debug_spawn_player(
+pub fn spawn_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
@@ -19,13 +18,6 @@ pub fn debug_spawn_player(
         asset_server.clone(),
         &mut texture_atlas_layouts,
     ));
-}
-
-pub fn debug_camera_seek_player(
-    mut camera_transform: Single<&mut Transform, (With<Camera2d>, Without<Creature>)>,
-    player_transform: Single<&Transform, (With<Creature>, Without<Camera2d>)>,
-) {
-    camera_transform.translation = player_transform.translation.clone();
 }
 
 pub fn record_creature_wasd_input(

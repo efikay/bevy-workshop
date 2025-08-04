@@ -3,4 +3,6 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct Creature;
+pub struct Creature {
+    pub is_controlled: bool,
+}

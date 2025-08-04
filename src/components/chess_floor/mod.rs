@@ -1,4 +1,2 @@
-mod bundles;
-mod config;
-
-pub use bundles::make_sprite_bundles;
+pub mod bundles;
+pub mod config;

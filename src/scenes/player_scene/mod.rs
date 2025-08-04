@@ -5,16 +5,10 @@
 
 use bevy::prelude::*;
 
-mod animation;
-mod movement;
-mod player;
+use crate::{components::screen_wrap, features::creature};
+
 pub mod level;
 
 pub(super) fn plugin(app: &mut App) {
-    app.add_plugins((
-        animation::plugin,
-        level::plugin,
-        movement::plugin,
-        player::plugin,
-    ));
+    app.add_plugins((screen_wrap::plugin, creature::plugin, level::plugin));
 }

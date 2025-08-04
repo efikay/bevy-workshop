@@ -4,7 +4,7 @@ use bevy::{
     window::{CursorOptions, WindowMode},
 };
 
-use crate::shared::{PausableAppSystems, AppPauseState, AppSystems};
+use crate::shared::{AppPauseState, AppSystems, PausableAppSystems};
 
 // Base plugin collection. Used to configure default plugins and prepare the game
 pub struct BasePlugins;
