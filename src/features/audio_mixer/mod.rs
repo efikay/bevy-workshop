@@ -23,7 +23,7 @@ pub fn plugin(app: &mut App) {
     app.add_event::<events::LoadStemRequest>();
     app.add_event::<events::PausePlaybackRequest>();
     app.add_event::<events::StopPlaybackRequest>();
-    app.add_event::<events::AudioPlayRequestEvent>();
+    app.add_event::<events::StartPlaybackRequest>();
     app.add_event::<events::MuteStemRequest>();
     app.add_event::<events::UnmuteStemRequest>();
 

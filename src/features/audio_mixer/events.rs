@@ -21,4 +21,4 @@ pub struct MuteStemRequest(pub Stem);
 pub struct UnmuteStemRequest(pub Stem);
 
 #[derive(Event)]
-pub struct AudioPlayRequestEvent;
+pub struct StartPlaybackRequest;

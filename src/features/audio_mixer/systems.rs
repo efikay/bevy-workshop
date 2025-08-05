@@ -6,7 +6,7 @@ use bevy_seedling::sample::{PlaybackSettings, Sample};
 use crate::features::audio_mixer::resource::{AudioMixer, Stem};
 
 use super::events::{
-    AudioPlayRequestEvent, LoadStemRequest, MuteStemRequest, PausePlaybackRequest,
+    StartPlaybackRequest, LoadStemRequest, MuteStemRequest, PausePlaybackRequest,
     StopPlaybackRequest, UnmuteStemRequest,
 };
 
@@ -66,7 +66,7 @@ pub fn stop_tracks(
 
 pub fn play_tracks(
     mut tracks: Query<&mut PlaybackSettings>,
-    mut play_requests: EventReader<AudioPlayRequestEvent>,
+    mut play_requests: EventReader<StartPlaybackRequest>,
 ) {
     for _ in play_requests.read() {
         for mut playback in &mut tracks {
@@ -104,7 +104,7 @@ pub fn unmute_requested_track(
 pub mod debug {
     use crate::features::audio_mixer::{
         events::{
-            AudioPlayRequestEvent, LoadStemRequest, MuteStemRequest, PausePlaybackRequest,
+            StartPlaybackRequest, LoadStemRequest, MuteStemRequest, PausePlaybackRequest,
             StopPlaybackRequest, UnmuteStemRequest,
         },
         resource::Stem,
@@ -137,10 +137,10 @@ pub mod debug {
         ]);
     }
 
-    pub fn play_music(mut writer: EventWriter<AudioPlayRequestEvent>) {
+    pub fn play_music(mut writer: EventWriter<StartPlaybackRequest>) {
         log::info!("debug:: Play music request sent!");
 
-        writer.write(AudioPlayRequestEvent);
+        writer.write(StartPlaybackRequest);
     }
     pub fn pause_music(mut writer: EventWriter<PausePlaybackRequest>) {
         log::info!("debug:: Pause music request sent!");
