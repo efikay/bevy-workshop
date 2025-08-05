@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
+    features::game_cursor,
     menus, scenes, screens,
     shared::{asset_tracking, audio},
     ui_kit,
@@ -25,6 +26,7 @@ impl Plugin for AppPlugin {
             menus::plugin,
             screens::plugin,
             ui_kit::plugin,
+            game_cursor::plugin,
         ));
 
         println!("Hello! It's me, app!");
