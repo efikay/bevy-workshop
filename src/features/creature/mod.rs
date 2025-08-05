@@ -22,7 +22,11 @@ pub fn plugin(app: &mut App) {
         Update,
         (
             systems::tick_creature_animation_timer.in_set(AppSystems::TickTimers),
-            systems::record_creature_wasd_input.in_set(AppSystems::RecordInput),
+            (
+                systems::record_creature_wasd_input,
+                systems::record_creature_gamepad_movement_input,
+            )
+                .in_set(AppSystems::RecordInput),
             (
                 systems::update_creature_animation_state,
                 systems::update_creature_sprite_animation,

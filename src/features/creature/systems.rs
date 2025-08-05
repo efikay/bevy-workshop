@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+use bevy::input::gamepad::GamepadConnection;
 use bevy::{input::gamepad::GamepadEvent, prelude::*};
 
 use super::markers::Creature;
@@ -38,6 +39,47 @@ pub fn record_creature_wasd_input(
     for (mut movement, creature) in &mut creature_query {
         if creature.is_controlled {
             movement.intent = intent;
+        }
+    }
+}
+
+pub fn record_creature_gamepad_movement_input(
+    gamepads: Query<&Gamepad>,
+    mut creature: Query<(&mut Movement, &Creature)>,
+) {
+    const MIN_AXIS_SENSITIVITY: f32 = 0.2;
+
+    for gamepad in &gamepads {
+        // Collect directional input.
+        let mut intent = Vec2::ZERO;
+        if gamepad.pressed(GamepadButton::DPadUp) {
+            intent.y += 1.0;
+        }
+        if gamepad.pressed(GamepadButton::DPadDown) {
+            intent.y -= 1.0;
+        }
+        if gamepad.pressed(GamepadButton::DPadLeft) {
+            intent.x -= 1.0;
+        }
+        if gamepad.pressed(GamepadButton::DPadRight) {
+            intent.x += 1.0;
+        }
+
+        if let Some(left_stick_x) = gamepad.get(GamepadAxis::LeftStickX) {
+            if left_stick_x.abs() > MIN_AXIS_SENSITIVITY {
+                intent.x += left_stick_x;
+            }
+        }
+        if let Some(left_stick_y) = gamepad.get(GamepadAxis::LeftStickY) {
+            if left_stick_y.abs() > MIN_AXIS_SENSITIVITY {
+                intent.y += left_stick_y;
+            }
+        }
+
+        for (mut movement, creature) in &mut creature {
+            if creature.is_controlled {
+                movement.intent = intent.clamp(Vec2::NEG_ONE, Vec2::ONE);
+            }
         }
     }
 }
