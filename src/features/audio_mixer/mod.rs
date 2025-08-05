@@ -1,4 +1,6 @@
-mod events;
+#![allow(dead_code)]
+
+pub mod events;
 mod resource;
 mod systems;
 
