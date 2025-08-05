@@ -61,6 +61,7 @@ tracing = { version = "0.1", features = [
 ] }
 ndarray = "0.16.1"
 bevy_framepace = "0.19.1"
+hashbrown = "0.15.4"
 
 
 [features]
@@ -73,7 +74,7 @@ inspector = [
   # "inspector__audio_mixer",
   # "inspector__app_pause_state",
   # "inspector__creature",
-  # "inspector__world",
+  "inspector__world",
 ]
 dev = [
   "bevy/bevy_dev_tools",
