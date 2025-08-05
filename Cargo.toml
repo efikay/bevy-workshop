@@ -70,10 +70,10 @@ inspector__audio_mixer = []
 inspector__creature = []
 inspector__world = []
 inspector = [
-  "inspector__audio_mixer",
-  "inspector__app_pause_state",
-  "inspector__creature",
-  "inspector__world",
+  # "inspector__audio_mixer",
+  # "inspector__app_pause_state",
+  # "inspector__creature",
+  # "inspector__world",
 ]
 dev = [
   "bevy/bevy_dev_tools",
@@ -81,7 +81,7 @@ dev = [
   # Improve error messages coming from Bevy
   "bevy/track_location",
   # bevy_inspector_egui usage
-  # "inspector",
+  "inspector",
 ]
 default = ["dev_native"]
 dev_native = [
