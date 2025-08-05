@@ -5,7 +5,44 @@ edition = "2024"
 
 [dependencies]
 # ECS-driven game engine (and also it's awesome btw)
-bevy = { version = "0.16.1", features = ["dynamic_linking"] }
+bevy = { version = "0.16.1", features = [
+  "dynamic_linking",
+  "animation",
+  "bevy_asset",
+  "bevy_color",
+  "bevy_core_pipeline",
+  "bevy_dev_tools",
+  "bevy_gilrs",
+  "bevy_gizmos",
+  "bevy_gltf",
+  "bevy_mesh_picking_backend",
+  "bevy_pbr",
+  "bevy_picking",
+  "bevy_render",
+  "bevy_scene",
+  "bevy_sprite",
+  "bevy_sprite_picking_backend",
+  "bevy_state",
+  "bevy_text",
+  "bevy_ui",
+  "bevy_ui_picking_backend",
+  "bevy_window",
+  "bevy_winit",
+  "bevy_ui_debug",
+  "custom_cursor",
+  "default_font",
+  "hdr",
+  "multi_threaded",
+  "png",
+  "smaa_luts",
+  "sysinfo_plugin",
+  "tonemapping_luts",
+  "webgl2",
+  "x11",
+] }
+bevy_seedling = { version = "0.4", features = ["mp3", "flac"] }
+bevy-inspector-egui = "0.32"
+
 rand = "0.9.2"
 
 # Better enums
@@ -27,11 +64,24 @@ bevy_framepace = "0.19.1"
 
 
 [features]
+# Inspector UI
+inspector__app_pause_state = []
+inspector__audio_mixer = []
+inspector__creature = []
+inspector__world = []
+inspector = [
+  # "inspector__audio_mixer",
+  # "inspector__app_pause_state",
+  # "inspector__creature",
+  # "inspector__world",
+]
 dev = [
   "bevy/bevy_dev_tools",
   "bevy/bevy_ui_debug",
   # Improve error messages coming from Bevy
   "bevy/track_location",
+  # bevy_inspector_egui usage
+  "inspector",
 ]
 default = ["dev_native"]
 dev_native = [

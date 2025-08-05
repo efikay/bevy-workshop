@@ -56,7 +56,7 @@ pub fn spawn_level(
 
 
 
-    let npcs_area = Rect::from_corners(Vec2::new(-3000.0, -3000.0), Vec2::new(5000.0, 5000.0));
+    let npcs_area = Rect::from_corners(Vec2::new(-200.0, -200.0), Vec2::new(200.0, 200.0));
     let npc_chunk = Vec2::new(200.0, 200.0);
 
     for spawn_area in PrimitiveRect::new(npcs_area.min.into(), npcs_area.max.into())

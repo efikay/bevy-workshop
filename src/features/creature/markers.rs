@@ -2,7 +2,7 @@
 
 use bevy::prelude::*;
 
-#[derive(Component)]
+#[derive(Component, Reflect)]
 pub struct Creature {
     pub is_controlled: bool,
 }

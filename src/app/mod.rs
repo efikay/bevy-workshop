@@ -15,12 +15,13 @@ impl Plugin for AppPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(base_plugins::BasePlugins);
 
+        #[cfg(feature = "dev")]
+        app.add_plugins(dev_tools::plugin);
+
         app.add_plugins((
             asset_tracking::plugin,
             audio::plugin,
             scenes::plugin,
-            #[cfg(feature = "dev")]
-            dev_tools::plugin,
             menus::plugin,
             screens::plugin,
             ui_kit::plugin,
