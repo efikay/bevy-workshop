@@ -21,6 +21,7 @@ impl Plugin for BasePlugins {
 
         // Set up the `Pause` state.
         app.init_state::<AppPauseState>();
+        app.init_state::<AppPauseState>();
         app.configure_sets(
             Update,
             PausableAppSystems.run_if(in_state(AppPauseState(false))),

@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use bevy::prelude::*;
+use bevy_inspector_egui::InspectorOptions;
 use bevy_seedling::{prelude::PoolLabel, sample::Sample};
 use strum_macros::Display;
 
@@ -21,7 +22,7 @@ pub enum AudioMixerStatus {
     Paused,
 }
 
-#[derive(Resource, Asset, Clone, Reflect)]
+#[derive(Resource, Asset, Clone, Reflect, InspectorOptions)]
 #[reflect(Resource)]
 pub struct AudioMixer {
     registered_stems: HashMap<Stem, Handle<Sample>>,

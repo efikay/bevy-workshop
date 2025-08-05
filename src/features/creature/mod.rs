@@ -32,4 +32,11 @@ pub fn plugin(app: &mut App) {
         )
             .in_set(PausableAppSystems),
     );
+
+    #[cfg(feature = "inspector__creature")]
+    {
+        use bevy_inspector_egui::quick::FilterQueryInspectorPlugin;
+
+        app.add_plugins(FilterQueryInspectorPlugin::<With<markers::Creature>>::default());
+    }
 }

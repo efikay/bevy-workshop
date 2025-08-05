@@ -41,6 +41,7 @@ bevy = { version = "0.16.1", features = [
   "x11",
 ] }
 bevy_seedling = { version = "0.4", features = ["mp3", "flac"] }
+bevy-inspector-egui = "0.32"
 
 rand = "0.9.2"
 
@@ -63,11 +64,24 @@ bevy_framepace = "0.19.1"
 
 
 [features]
+# Inspector UI
+inspector__app_pause_state = []
+inspector__audio_mixer = []
+inspector__creature = []
+inspector__world = []
+inspector = [
+  "inspector__audio_mixer",
+  "inspector__app_pause_state",
+  "inspector__creature",
+  "inspector__world",
+]
 dev = [
   "bevy/bevy_dev_tools",
   "bevy/bevy_ui_debug",
   # Improve error messages coming from Bevy
   "bevy/track_location",
+  # bevy_inspector_egui usage
+  # "inspector",
 ]
 default = ["dev_native"]
 dev_native = [

@@ -7,12 +7,25 @@ use bevy_seedling::SeedlingPlugin;
 
 pub fn plugin(app: &mut App) {
     app.add_plugins(SeedlingPlugin::default());
+
     app.init_resource::<resource::AudioMixer>();
+    app.register_type::<resource::AudioMixer>();
+
+    #[cfg(feature = "inspector__audio_mixer")]
+    {
+        use bevy_inspector_egui::quick::{FilterQueryInspectorPlugin, ResourceInspectorPlugin};
+        use bevy_seedling::sample::SamplePlayer;
+
+        app.add_plugins(ResourceInspectorPlugin::<resource::AudioMixer>::default());
+        app.add_plugins(FilterQueryInspectorPlugin::<With<SamplePlayer>>::default());
+    }
 
     app.add_event::<events::LoadStemRequest>();
-    app.add_event::<events::MuteStemRequest>();
     app.add_event::<events::PausePlaybackRequest>();
+    app.add_event::<events::StopPlaybackRequest>();
     app.add_event::<events::AudioPlayRequestEvent>();
+    app.add_event::<events::MuteStemRequest>();
+    app.add_event::<events::UnmuteStemRequest>();
 
     app.add_systems(Startup, systems::initialize_audio);
     app.add_systems(

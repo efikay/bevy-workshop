@@ -50,8 +50,6 @@ pub fn pause_tracks(
         for mut playback in &mut tracks {
             playback.pause();
         }
-
-        break; // No sense to repeat
     }
 }
 
@@ -63,8 +61,6 @@ pub fn stop_tracks(
         for mut playback in &mut tracks {
             playback.stop();
         }
-
-        break; // No sense to repeat
     }
 }
 
@@ -108,7 +104,8 @@ pub fn unmute_requested_track(
 pub mod debug {
     use crate::features::audio_mixer::{
         events::{
-            AudioPlayRequestEvent, LoadStemRequest, MuteStemRequest, PausePlaybackRequest, StopPlaybackRequest, UnmuteStemRequest
+            AudioPlayRequestEvent, LoadStemRequest, MuteStemRequest, PausePlaybackRequest,
+            StopPlaybackRequest, UnmuteStemRequest,
         },
         resource::Stem,
     };
