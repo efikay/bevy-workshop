@@ -1,9 +1,11 @@
 #![allow(dead_code)]
 
-use std::f32;
 use bevy::math::Vec2;
+use std::f32;
 
-use super::utils::vec2_to_normalized_degrees;
+use crate::shared::utils::vec2::vec2_to_normalized_degrees;
+
+use super::DirectionSimple;
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Default, Hash)]
 pub enum DirectionAdvanced {
@@ -18,8 +20,8 @@ pub enum DirectionAdvanced {
     NorthWest,
 }
 impl From<Vec2> for DirectionAdvanced {
-    fn from(point: Vec2) -> Self {
-        match vec2_to_normalized_degrees(point) {
+    fn from(intent: Vec2) -> Self {
+        match vec2_to_normalized_degrees(intent) {
             Some(degree) => match degree {
                 a if a < 22.5 || a >= 337.5 => Self::East,
                 a if a >= 22.5 && a < 67.5 => Self::NorthEast,
@@ -34,7 +36,23 @@ impl From<Vec2> for DirectionAdvanced {
             None => {
                 // Point is exactly in center, no direction. Let's stick with default
                 Self::default()
-            },
+            }
+        }
+    }
+}
+
+impl DirectionAdvanced {
+    /// Not enough data so we "rotate+45deg" every mid-direction
+    pub fn to_simple_lossy(&self) -> DirectionSimple {
+        match self {
+            DirectionAdvanced::North => DirectionSimple::North,
+            DirectionAdvanced::NorthEast => DirectionSimple::East,
+            DirectionAdvanced::East => DirectionSimple::East,
+            DirectionAdvanced::SouthEast => DirectionSimple::South,
+            DirectionAdvanced::South => DirectionSimple::South,
+            DirectionAdvanced::SouthWest => DirectionSimple::West,
+            DirectionAdvanced::West => DirectionSimple::West,
+            DirectionAdvanced::NorthWest => DirectionSimple::North,
         }
     }
 }

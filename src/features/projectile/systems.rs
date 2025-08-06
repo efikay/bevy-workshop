@@ -14,14 +14,17 @@ pub fn spawn_event_projectiles(
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
     for pending_projectile in events.read() {
-        let events::SendProjectile { from, speed } = pending_projectile;
+        let events::SendProjectile { from, speed, intent } = pending_projectile;
 
         let layout = TextureAtlasLayout::from_grid(UVec2::splat(128), 10, 6, None, None);
 
         commands.spawn((
             Name::new("Projectile"),
             marker::Projectile,
-            Movement::new(*speed),
+            Movement {
+                intent: intent.floor(),
+                max_speed: *speed,
+            },
             Animation::new(RangeDoubleMapper::new(|_| |_| 0..60)),
             Sprite {
                 image: asset_server

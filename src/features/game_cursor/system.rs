@@ -31,7 +31,6 @@ pub fn update_cursor_from_event(
 ) {
     for SetGameCursor(requested_cursor) in events.read() {
         window.1.cursor_options.visible = requested_cursor.is_some();
-        println!("Hey! Look! {}", window.1.cursor_options.visible);
 
         let Some(requested_cursor_type) = requested_cursor else {
             return;

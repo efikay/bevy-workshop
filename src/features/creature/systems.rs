@@ -95,13 +95,17 @@ pub fn record_creature_wasd_input(
 
 pub fn record_player_action_input(
     input: Res<ButtonInput<KeyCode>>,
-    player_transform: Single<&Transform, With<Player>>,
+    player: Single<(&Transform, &Movement), With<Player>>,
     mut writer: EventWriter<SendProjectile>,
 ) {
+    let transform = player.0;
+    let movement = player.1;
+
     if input.just_pressed(KeyCode::KeyE) {
         writer.write(SendProjectile {
-            from: player_transform.clone(),
-            speed: 300.,
+            from: transform.clone(),
+            intent: movement.intent,
+            speed: 600.,
         });
     }
 }

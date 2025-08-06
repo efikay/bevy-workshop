@@ -3,14 +3,14 @@ use std::time::Duration;
 use bevy::prelude::*;
 
 use crate::shared::data_structures::RangeDoubleMapper;
-use crate::shared::direction::DirectionSimple;
+use crate::shared::direction::DirectionAdvanced;
 
 use super::animation_state::AnimationState;
 
 #[derive(Component, Debug)]
 pub struct Animation {
     timer: Timer,
-    frame_grid: RangeDoubleMapper<AnimationState, DirectionSimple>,
+    frame_grid: RangeDoubleMapper<AnimationState, DirectionAdvanced>,
 }
 impl Animation {
     // TODO: Move from constant to struct field
@@ -19,7 +19,7 @@ impl Animation {
     // TODO: Move from constant to struct field
     const KEEP_DIRECTION_ON_IDLE: bool = true;
 
-    pub fn new(frame_grid: RangeDoubleMapper<AnimationState, DirectionSimple>) -> Self {
+    pub fn new(frame_grid: RangeDoubleMapper<AnimationState, DirectionAdvanced>) -> Self {
         Self {
             timer: Timer::new(Self::ANIMATION_INTERVAL, TimerMode::Repeating),
             frame_grid,
@@ -56,7 +56,7 @@ impl Animation {
         if !Self::KEEP_DIRECTION_ON_IDLE
             || (Self::KEEP_DIRECTION_ON_IDLE && animation_state != AnimationState::Idle)
         {
-            let direction = DirectionSimple::from(point);
+            let direction = DirectionAdvanced::from(point);
             self.frame_grid.update_inner(direction);
         }
     }

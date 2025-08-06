@@ -1,6 +1,7 @@
 use bevy::math::Vec2;
 
-use super::utils::vec2_to_normalized_degrees;
+use crate::shared::utils::vec2::vec2_to_normalized_degrees;
+
 use super::advanced::DirectionAdvanced;
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Default, Hash)]
@@ -28,4 +29,3 @@ impl From<Vec2> for DirectionSimple {
         }
     }
 }
-

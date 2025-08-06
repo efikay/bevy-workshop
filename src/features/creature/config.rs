@@ -5,7 +5,11 @@ use bevy::prelude::*;
 
 use crate::{
     components::_animovement::AnimationState,
-    shared::{data_structures::RangeDoubleMapper, direction::DirectionSimple, z_levels::ZLevel},
+    shared::{
+        data_structures::RangeDoubleMapper,
+        direction::{DirectionAdvanced, DirectionSimple},
+        z_levels::ZLevel,
+    },
 };
 
 #[derive(PartialEq)]
@@ -20,7 +24,7 @@ pub enum CreatureType {
 pub struct CreatureConfig {
     pub atlas_sprite_path: String,
     pub atlas_layout: TextureAtlasLayout,
-    pub atlas_grid_mapper: RangeDoubleMapper<AnimationState, DirectionSimple>,
+    pub atlas_grid_mapper: RangeDoubleMapper<AnimationState, DirectionAdvanced>,
 
     pub is_controlled: bool,
     pub is_camera_target: bool,
@@ -36,13 +40,13 @@ impl CreatureConfig {
             atlas_sprite_path: String::from("sprites/character/male/idle+walk.png"),
             atlas_layout: TextureAtlasLayout::from_grid(UVec2::new(48, 64), 8, 12, None, None),
             atlas_grid_mapper: RangeDoubleMapper::new(|animation_state| match animation_state {
-                AnimState::Walk => |direction| match direction {
+                AnimState::Walk => |direction| match direction.to_simple_lossy() {
                     DirectionSimple::North => 24..32,
                     DirectionSimple::South => 0..8,
                     DirectionSimple::East => 40..48,
                     DirectionSimple::West => 8..16,
                 },
-                AnimState::Idle => |direction| match direction {
+                AnimState::Idle => |direction| match direction.to_simple_lossy() {
                     DirectionSimple::North => 72..80,
                     DirectionSimple::South => 48..56,
                     DirectionSimple::East => 88..96,
@@ -67,13 +71,13 @@ impl CreatureConfig {
             atlas_sprite_path: String::from("sprites/character/female/idle+walk.png"),
             atlas_layout: TextureAtlasLayout::from_grid(UVec2::new(48, 64), cols, rows, None, None),
             atlas_grid_mapper: RangeDoubleMapper::new(|animation_state| match animation_state {
-                AnimState::Idle => |direction| match direction {
+                AnimState::Idle => |direction| match direction.to_simple_lossy() {
                     DirectionSimple::North => 24..32,
                     DirectionSimple::South => 0..8,
                     DirectionSimple::East => 40..48,
                     DirectionSimple::West => 8..16,
                 },
-                AnimState::Walk => |direction| match direction {
+                AnimState::Walk => |direction| match direction.to_simple_lossy() {
                     DirectionSimple::North => 72..80,
                     DirectionSimple::South => 48..56,
                     DirectionSimple::East => 88..96,
