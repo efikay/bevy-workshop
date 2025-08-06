@@ -11,6 +11,13 @@ use crate::features::creature::{assets, config};
 use crate::shared::data_structures::{ChunkToGrid, PrimitiveRect};
 use crate::shared::z_levels::ZLevel;
 
+/// Searches for bundles with [`CreatureConfig`]-s and "unpacks" them into 
+/// full creature bundle with conditional markers on top
+/// 
+/// TODO: Probably not the best approach (it surely consumes some extra resources (by filling the scheduler at least))
+/// Also it triggers not instantly AFAIK
+/// 
+/// TODO: better dynamic bundle approaches?
 pub fn unpack_creature_configs(
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
