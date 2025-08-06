@@ -3,18 +3,65 @@
 use bevy::input::gamepad::GamepadConnection;
 use bevy::{input::gamepad::GamepadEvent, prelude::*};
 
-use super::markers::Creature;
-use crate::features::creature::bundles::npc_bundle;
+use super::markers::{ControlledCreature, Creature, EnemyNPC, FriendNPC, NeutralNPC, Player};
+use crate::components::camera_targeting::marker::CameraTarget;
+use crate::components::{animation::Animation, movement::Movement};
+use crate::features;
+use crate::features::creature::{assets, config};
 use crate::shared::data_structures::{ChunkToGrid, PrimitiveRect};
 use crate::shared::z_levels::ZLevel;
-use crate::{
-    components::{animation::Animation, movement::Movement},
-    features::creature::bundles::player_bundle,
-};
+
+pub fn unpack_creature_configs(
+    asset_server: Res<AssetServer>,
+    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+    configs_query: Query<(&config::CreatureConfig, Entity), With<config::CreatureConfig>>,
+    mut commands: Commands,
+) {
+    for (config, entity) in configs_query {
+        let layout = texture_atlas_layouts.add(config.atlas_layout.clone());
+
+        let assets = {
+            let mut builder = assets::CreatureAssetsBuilder::new(asset_server.clone());
+            builder.with_atlas_image(&config.atlas_sprite_path, TextureAtlas { layout, index: 0 });
+
+            builder.build().unwrap()
+        };
+
+        let sprite = assets.sprite_atlas.sprite();
+
+        let animation = Animation::new(config.atlas_grid_mapper.clone());
+
+        // In case we don't 
+        commands
+            .entity(entity)
+            .remove::<config::CreatureConfig>()
+            .insert((
+                Creature,
+                Movement::default(),
+                sprite,
+                animation,
+                config.initial_transform,
+            ))
+            .insert_if(CameraTarget, || config.is_camera_target)
+            .insert_if(ControlledCreature, || config.is_controlled)
+            .insert_if(Player, || {
+                config.creature_type == config::CreatureType::Player
+            })
+            .insert_if(EnemyNPC, || {
+                config.creature_type == config::CreatureType::EnemyNPC
+            })
+            .insert_if(FriendNPC, || {
+                config.creature_type == config::CreatureType::FriendNPC
+            })
+            .insert_if(NeutralNPC, || {
+                config.creature_type == config::CreatureType::NeutralNPC
+            });
+    }
+}
 
 pub fn record_creature_wasd_input(
     input: Res<ButtonInput<KeyCode>>,
-    mut creature_query: Query<(&mut Movement, &Creature)>,
+    mut creature_query: Query<&mut Movement, With<ControlledCreature>>,
 ) {
     // Collect directional input.
     let mut intent = Vec2::ZERO;
@@ -36,16 +83,14 @@ pub fn record_creature_wasd_input(
     let intent = intent.normalize_or_zero();
 
     // Apply movement intent to controllers.
-    for (mut movement, creature) in &mut creature_query {
-        if creature.is_controlled {
-            movement.intent = intent;
-        }
+    for mut movement in &mut creature_query {
+        movement.intent = intent;
     }
 }
 
 pub fn record_creature_gamepad_movement_input(
     gamepads: Query<&Gamepad>,
-    mut creature: Query<(&mut Movement, &Creature)>,
+    mut creature: Query<&mut Movement, With<ControlledCreature>>,
 ) {
     const MIN_AXIS_SENSITIVITY: f32 = 0.2;
 
@@ -76,10 +121,8 @@ pub fn record_creature_gamepad_movement_input(
             }
         }
 
-        for (mut movement, creature) in &mut creature {
-            if creature.is_controlled {
-                movement.intent = intent.clamp(Vec2::NEG_ONE, Vec2::ONE);
-            }
+        for mut movement in &mut creature {
+            movement.intent = intent.clamp(Vec2::NEG_ONE, Vec2::ONE);
         }
     }
 }

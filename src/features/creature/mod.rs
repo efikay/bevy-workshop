@@ -3,7 +3,6 @@
 use bevy::prelude::*;
 
 mod assets;
-mod bundles;
 mod config;
 mod markers;
 mod systems;
@@ -12,7 +11,8 @@ use crate::{
     components::{camera_targeting, movement},
     shared::{AppSystems, PausableAppSystems},
 };
-pub use bundles::*;
+
+pub use config::CreatureConfig;
 
 pub fn plugin(app: &mut App) {
     app.add_plugins(movement::plugin);
@@ -30,6 +30,7 @@ pub fn plugin(app: &mut App) {
             (
                 systems::update_creature_animation_state,
                 systems::update_creature_sprite_animation,
+                systems::unpack_creature_configs,
             )
                 .chain()
                 .in_set(AppSystems::Update),

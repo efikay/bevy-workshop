@@ -12,12 +12,7 @@ pub struct CreatureSpriteAtlas {
 impl CreatureSpriteAtlas {
     pub fn new(asset_server: &AssetServer, image_path: &str, texture_atlas: TextureAtlas) -> Self {
         let sprite = Sprite {
-            image: asset_server.load_with_settings(
-                image_path,
-                |settings: &mut ImageLoaderSettings| {
-                    settings.sampler = ImageSampler::nearest();
-                },
-            ),
+            image: asset_server.load(image_path),
             texture_atlas: Some(texture_atlas),
             ..default()
         };

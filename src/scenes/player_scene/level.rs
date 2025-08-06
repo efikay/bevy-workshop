@@ -49,26 +49,17 @@ pub fn spawn_level(
         commands.spawn(sprite_bundle);
     }
 
-    commands.spawn(creature::player_bundle(
-        asset_server.clone(),
-        &mut texture_atlas_layouts,
-    ));
-
-
+    commands.spawn(creature::CreatureConfig::player());
 
     let npcs_area = Rect::from_corners(Vec2::new(-200.0, -200.0), Vec2::new(200.0, 200.0));
     let npc_chunk = Vec2::new(200.0, 200.0);
 
-    for spawn_area in PrimitiveRect::new(npcs_area.min.into(), npcs_area.max.into())
-        .chunk_to_grid(npc_chunk)
+    for spawn_area in
+        PrimitiveRect::new(npcs_area.min.into(), npcs_area.max.into()).chunk_to_grid(npc_chunk)
     {
         let center = spawn_area.max() - (npc_chunk / 2.0);
 
-        commands.spawn(creature::npc_bundle(
-            asset_server.clone(),
-            &mut texture_atlas_layouts,
-            center,
-        ));
+        commands.spawn(creature::CreatureConfig::npc(center));
     }
 
     commands.spawn((

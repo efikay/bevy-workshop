@@ -8,12 +8,23 @@ use crate::{
     shared::{data_structures::RangeDoubleMapper, direction::DirectionSimple, z_levels::ZLevel},
 };
 
+#[derive(PartialEq)]
+pub enum CreatureType {
+    Player,
+    EnemyNPC,
+    FriendNPC,
+    NeutralNPC,
+}
+
+#[derive(Component)]
 pub struct CreatureConfig {
     pub atlas_sprite_path: String,
     pub atlas_layout: TextureAtlasLayout,
     pub atlas_grid_mapper: RangeDoubleMapper<AnimationState, DirectionSimple>,
+
     pub is_controlled: bool,
     pub is_camera_target: bool,
+    pub creature_type: CreatureType,
     pub initial_transform: Transform,
 }
 
@@ -40,6 +51,7 @@ impl CreatureConfig {
             }),
             is_controlled: true,
             is_camera_target: true,
+            creature_type: CreatureType::Player,
             initial_transform: Transform::from_xyz(0.0, 0.0, ZLevel::Ground.into())
                 .with_scale(Vec3::new(4.0, 4.0, 4.0)),
         }
@@ -70,6 +82,7 @@ impl CreatureConfig {
             }),
             is_controlled: false,
             is_camera_target: false,
+            creature_type: CreatureType::EnemyNPC,
             initial_transform: Transform::from_translation(
                 initial_position.extend(ZLevel::Ground.into()),
             )
