@@ -3,11 +3,15 @@
 use bevy::input::gamepad::GamepadConnection;
 use bevy::{input::gamepad::GamepadEvent, prelude::*};
 
-use super::markers::{ControlledCreature, Creature, EnemyNPC, FriendNPC, NeutralNPC, Player};
+use super::markers::{
+    Creature,
+    creature_type::{EnemyNPC, FriendNPC, NeutralNPC, Player},
+};
 use crate::components::camera_targeting::marker::CameraTarget;
 use crate::components::{animation::Animation, movement::Movement};
 use crate::features;
 use crate::features::creature::config;
+use crate::shared::common_markers::WASD;
 use crate::shared::data_structures::{ChunkToGrid, PrimitiveRect};
 use crate::shared::z_levels::ZLevel;
 
@@ -43,7 +47,7 @@ pub fn unpack_creature_configs(
                 config.initial_transform,
             ))
             .insert_if(CameraTarget, || config.is_camera_target)
-            .insert_if(ControlledCreature, || config.is_controlled)
+            .insert_if(WASD, || config.is_controlled)
             .insert_if(Player, || {
                 config.creature_type == config::CreatureType::Player
             })
@@ -61,7 +65,7 @@ pub fn unpack_creature_configs(
 
 pub fn record_creature_wasd_input(
     input: Res<ButtonInput<KeyCode>>,
-    mut creature_query: Query<&mut Movement, With<ControlledCreature>>,
+    mut creature_query: Query<&mut Movement, With<WASD>>,
 ) {
     // Collect directional input.
     let mut intent = Vec2::ZERO;
@@ -90,7 +94,7 @@ pub fn record_creature_wasd_input(
 
 pub fn record_creature_gamepad_movement_input(
     gamepads: Query<&Gamepad>,
-    mut creature: Query<&mut Movement, With<ControlledCreature>>,
+    mut creature: Query<&mut Movement, With<WASD>>,
 ) {
     const MIN_AXIS_SENSITIVITY: f32 = 0.2;
 
