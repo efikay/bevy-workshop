@@ -7,16 +7,16 @@ use super::markers::{ControlledCreature, Creature, EnemyNPC, FriendNPC, NeutralN
 use crate::components::camera_targeting::marker::CameraTarget;
 use crate::components::{animation::Animation, movement::Movement};
 use crate::features;
-use crate::features::creature::{assets, config};
+use crate::features::creature::config;
 use crate::shared::data_structures::{ChunkToGrid, PrimitiveRect};
 use crate::shared::z_levels::ZLevel;
 
-/// Searches for bundles with [`CreatureConfig`]-s and "unpacks" them into 
+/// Searches for bundles with [`CreatureConfig`]-s and "unpacks" them into
 /// full creature bundle with conditional markers on top
-/// 
+///
 /// TODO: Probably not the best approach (it surely consumes some extra resources (by filling the scheduler at least))
 /// Also it triggers not instantly AFAIK
-/// 
+///
 /// TODO: better dynamic bundle approaches?
 pub fn unpack_creature_configs(
     asset_server: Res<AssetServer>,
@@ -25,28 +25,21 @@ pub fn unpack_creature_configs(
     mut commands: Commands,
 ) {
     for (config, entity) in configs_query {
-        let layout = texture_atlas_layouts.add(config.atlas_layout.clone());
-
-        let assets = {
-            let mut builder = assets::CreatureAssetsBuilder::new(asset_server.clone());
-            builder.with_atlas_image(&config.atlas_sprite_path, TextureAtlas { layout, index: 0 });
-
-            builder.build().unwrap()
-        };
-
-        let sprite = assets.sprite_atlas.sprite();
-
-        let animation = Animation::new(config.atlas_grid_mapper.clone());
-
-        // In case we don't 
         commands
             .entity(entity)
             .remove::<config::CreatureConfig>()
             .insert((
                 Creature,
                 Movement::default(),
-                sprite,
-                animation,
+                Sprite {
+                    image: asset_server.load(config.atlas_sprite_path.clone()),
+                    texture_atlas: Some(TextureAtlas {
+                        layout: texture_atlas_layouts.add(config.atlas_layout.clone()),
+                        index: 0,
+                    }),
+                    ..default()
+                },
+                Animation::new(config.atlas_grid_mapper.clone()),
                 config.initial_transform,
             ))
             .insert_if(CameraTarget, || config.is_camera_target)

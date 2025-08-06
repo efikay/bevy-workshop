@@ -2,7 +2,6 @@
 
 use bevy::prelude::*;
 
-mod assets;
 mod config;
 mod markers;
 mod systems;
