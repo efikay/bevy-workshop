@@ -13,6 +13,7 @@ impl Plugin for BasePlugins {
         app.add_plugins(
             DefaultPlugins
                 .set(Self::asset_plugin())
+                .set(ImagePlugin::default_nearest())
                 .set(Self::window_plugin()),
         );
 

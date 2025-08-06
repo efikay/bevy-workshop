@@ -3,7 +3,7 @@
 use core::hash::Hash;
 use std::{collections::HashMap, ops::Range};
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct RangeDoubleMapper<KOuter, KInner> {
     grid_fn: fn(outer_key: &KOuter) -> fn(inner_fn: &KInner) -> Range<u8>,
 
@@ -13,8 +13,8 @@ pub struct RangeDoubleMapper<KOuter, KInner> {
 }
 impl<KOuter, KInner> RangeDoubleMapper<KOuter, KInner>
 where
-    KOuter: PartialEq + Default + Copy,
-    KInner: PartialEq + Default + Copy,
+    KOuter: PartialEq + Default + Copy + Clone,
+    KInner: PartialEq + Default + Copy + Clone,
 {
     pub fn new(grid_fn: fn(outer_key: &KOuter) -> fn(inner_fn: &KInner) -> Range<u8>) -> Self {
         let outer_key = KOuter::default();

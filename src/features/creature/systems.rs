@@ -3,18 +3,70 @@
 use bevy::input::gamepad::GamepadConnection;
 use bevy::{input::gamepad::GamepadEvent, prelude::*};
 
-use super::markers::Creature;
-use crate::features::creature::bundles::npc_bundle;
+use super::markers::{
+    Creature,
+    creature_type::{EnemyNPC, FriendNPC, NeutralNPC, Player},
+};
+use crate::components::_animovement::{Animation, Movement};
+use crate::components::camera_targeting::marker::CameraTarget;
+use crate::features;
+use crate::features::creature::config;
+use crate::features::projectile::events::SendProjectile;
+use crate::shared::common_markers::WASD;
 use crate::shared::data_structures::{ChunkToGrid, PrimitiveRect};
 use crate::shared::z_levels::ZLevel;
-use crate::{
-    components::{animation::Animation, movement::Movement},
-    features::creature::bundles::player_bundle,
-};
+
+/// Searches for bundles with [`CreatureConfig`]-s and "unpacks" them into
+/// full creature bundle with conditional markers on top
+///
+/// TODO: Probably not the best approach (it surely consumes some extra resources (by filling the scheduler at least))
+/// Also it triggers not instantly AFAIK
+///
+/// TODO: better dynamic bundle approaches?
+pub fn unpack_creature_configs(
+    asset_server: Res<AssetServer>,
+    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+    configs_query: Query<(&config::CreatureConfig, Entity), With<config::CreatureConfig>>,
+    mut commands: Commands,
+) {
+    for (config, entity) in configs_query {
+        commands
+            .entity(entity)
+            .remove::<config::CreatureConfig>()
+            .insert((
+                Creature,
+                Movement::default(),
+                Sprite {
+                    image: asset_server.load(config.atlas_sprite_path.clone()),
+                    texture_atlas: Some(TextureAtlas {
+                        layout: texture_atlas_layouts.add(config.atlas_layout.clone()),
+                        index: 0,
+                    }),
+                    ..default()
+                },
+                Animation::new(config.atlas_grid_mapper.clone()),
+                config.initial_transform,
+            ))
+            .insert_if(CameraTarget, || config.is_camera_target)
+            .insert_if(WASD, || config.is_controlled)
+            .insert_if(Player, || {
+                config.creature_type == config::CreatureType::Player
+            })
+            .insert_if(EnemyNPC, || {
+                config.creature_type == config::CreatureType::EnemyNPC
+            })
+            .insert_if(FriendNPC, || {
+                config.creature_type == config::CreatureType::FriendNPC
+            })
+            .insert_if(NeutralNPC, || {
+                config.creature_type == config::CreatureType::NeutralNPC
+            });
+    }
+}
 
 pub fn record_creature_wasd_input(
     input: Res<ButtonInput<KeyCode>>,
-    mut creature_query: Query<(&mut Movement, &Creature)>,
+    mut creature_query: Query<&mut Movement, With<WASD>>,
 ) {
     // Collect directional input.
     let mut intent = Vec2::ZERO;
@@ -36,16 +88,31 @@ pub fn record_creature_wasd_input(
     let intent = intent.normalize_or_zero();
 
     // Apply movement intent to controllers.
-    for (mut movement, creature) in &mut creature_query {
-        if creature.is_controlled {
-            movement.intent = intent;
-        }
+    for mut movement in &mut creature_query {
+        movement.intent = intent;
+    }
+}
+
+pub fn record_player_action_input(
+    input: Res<ButtonInput<KeyCode>>,
+    player: Single<(&Transform, &Movement), With<Player>>,
+    mut writer: EventWriter<SendProjectile>,
+) {
+    let transform = player.0;
+    let movement = player.1;
+
+    if input.just_pressed(KeyCode::KeyE) {
+        writer.write(SendProjectile {
+            from: transform.clone(),
+            intent: movement.intent,
+            speed: 600.,
+        });
     }
 }
 
 pub fn record_creature_gamepad_movement_input(
     gamepads: Query<&Gamepad>,
-    mut creature: Query<(&mut Movement, &Creature)>,
+    mut creature: Query<&mut Movement, With<WASD>>,
 ) {
     const MIN_AXIS_SENSITIVITY: f32 = 0.2;
 
@@ -76,40 +143,8 @@ pub fn record_creature_gamepad_movement_input(
             }
         }
 
-        for (mut movement, creature) in &mut creature {
-            if creature.is_controlled {
-                movement.intent = intent.clamp(Vec2::NEG_ONE, Vec2::ONE);
-            }
+        for mut movement in &mut creature {
+            movement.intent = intent.clamp(Vec2::NEG_ONE, Vec2::ONE);
         }
-    }
-}
-
-pub fn tick_creature_animation_timer(
-    time: Res<Time>,
-    mut query: Query<&mut Animation, With<Creature>>,
-) {
-    for mut animation in &mut query {
-        animation.update_timer(time.delta());
-    }
-}
-
-pub fn update_creature_sprite_animation(
-    mut query: Query<(&Animation, &mut Sprite), With<Creature>>,
-) {
-    for (animation, mut sprite) in &mut query {
-        // Is switched to next frame. Syncing with atlas frame
-        if animation.changed() {
-            let atlas = sprite.texture_atlas.as_mut().unwrap();
-
-            atlas.index = usize::from(animation.frame());
-        }
-    }
-}
-
-pub fn update_creature_animation_state(
-    mut player_query: Query<(&Movement, &mut Sprite, &mut Animation), With<Creature>>,
-) {
-    for (movement, mut _sprite, mut animation) in &mut player_query {
-        animation.update_from_point(movement.intent);
     }
 }
