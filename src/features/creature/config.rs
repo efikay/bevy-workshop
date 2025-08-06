@@ -4,7 +4,7 @@ use bevy::image::TextureAtlasLayout;
 use bevy::prelude::*;
 
 use crate::{
-    components::animation::AnimationState,
+    components::_animovement::AnimationState,
     shared::{data_structures::RangeDoubleMapper, direction::DirectionSimple, z_levels::ZLevel},
 };
 

@@ -7,10 +7,11 @@ use super::markers::{
     Creature,
     creature_type::{EnemyNPC, FriendNPC, NeutralNPC, Player},
 };
+use crate::components::_animovement::{Animation, Movement};
 use crate::components::camera_targeting::marker::CameraTarget;
-use crate::components::{animation::Animation, movement::Movement};
 use crate::features;
 use crate::features::creature::config;
+use crate::features::projectile::events::SendProjectile;
 use crate::shared::common_markers::WASD;
 use crate::shared::data_structures::{ChunkToGrid, PrimitiveRect};
 use crate::shared::z_levels::ZLevel;
@@ -92,6 +93,19 @@ pub fn record_creature_wasd_input(
     }
 }
 
+pub fn record_player_action_input(
+    input: Res<ButtonInput<KeyCode>>,
+    player_transform: Single<&Transform, With<Player>>,
+    mut writer: EventWriter<SendProjectile>,
+) {
+    if input.just_pressed(KeyCode::KeyE) {
+        writer.write(SendProjectile {
+            from: player_transform.clone(),
+            speed: 300.,
+        });
+    }
+}
+
 pub fn record_creature_gamepad_movement_input(
     gamepads: Query<&Gamepad>,
     mut creature: Query<&mut Movement, With<WASD>>,
@@ -128,35 +142,5 @@ pub fn record_creature_gamepad_movement_input(
         for mut movement in &mut creature {
             movement.intent = intent.clamp(Vec2::NEG_ONE, Vec2::ONE);
         }
-    }
-}
-
-pub fn tick_creature_animation_timer(
-    time: Res<Time>,
-    mut query: Query<&mut Animation, With<Creature>>,
-) {
-    for mut animation in &mut query {
-        animation.update_timer(time.delta());
-    }
-}
-
-pub fn update_creature_sprite_animation(
-    mut query: Query<(&Animation, &mut Sprite), With<Creature>>,
-) {
-    for (animation, mut sprite) in &mut query {
-        // Is switched to next frame. Syncing with atlas frame
-        if animation.changed() {
-            let atlas = sprite.texture_atlas.as_mut().unwrap();
-
-            atlas.index = usize::from(animation.frame());
-        }
-    }
-}
-
-pub fn update_creature_animation_state(
-    mut player_query: Query<(&Movement, &mut Sprite, &mut Animation), With<Creature>>,
-) {
-    for (movement, mut _sprite, mut animation) in &mut player_query {
-        animation.update_from_point(movement.intent);
     }
 }

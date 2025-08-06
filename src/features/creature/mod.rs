@@ -7,32 +7,28 @@ mod markers;
 mod systems;
 
 use crate::{
-    components::{camera_targeting, movement},
+    components::{camera_targeting, _animovement},
+    features::projectile,
     shared::{AppSystems, PausableAppSystems},
 };
 
 pub use config::CreatureConfig;
 
 pub fn plugin(app: &mut App) {
-    app.add_plugins(movement::plugin);
+    app.add_plugins(_animovement::plugin);
     app.add_plugins(camera_targeting::plugin);
+    app.add_plugins(projectile::plugin);
 
     app.add_systems(
         Update,
         (
-            systems::tick_creature_animation_timer.in_set(AppSystems::TickTimers),
             (
                 systems::record_creature_wasd_input,
                 systems::record_creature_gamepad_movement_input,
+                systems::record_player_action_input,
             )
                 .in_set(AppSystems::RecordInput),
-            (
-                systems::update_creature_animation_state,
-                systems::update_creature_sprite_animation,
-                systems::unpack_creature_configs,
-            )
-                .chain()
-                .in_set(AppSystems::Update),
+            systems::unpack_creature_configs.in_set(AppSystems::Update),
         )
             .in_set(PausableAppSystems),
     );
