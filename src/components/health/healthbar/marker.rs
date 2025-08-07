@@ -8,4 +8,5 @@ impl Healthbar {
 
     pub const MAX_WIDTH: f32 = 100.0;
     pub const HEIGHT: f32 = 10.0;
+    pub const PADDING_Y: f32 = 20.0;
 }
