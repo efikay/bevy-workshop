@@ -1,5 +1,6 @@
-use bevy::prelude::*;
+use bevy::{log, prelude::*};
 
+#[derive(Debug, strum_macros::Display)]
 pub enum TakeDamageResult {
     Dead,
     // So that's... progress
@@ -38,10 +39,14 @@ impl Health {
     pub fn take_damage(&mut self, damage: u32) -> TakeDamageResult {
         self.hp = self.hp.checked_sub(damage).unwrap_or(0);
 
-        if self.is_dead() {
+        let result = if self.is_dead() {
             TakeDamageResult::Dead
         } else {
             TakeDamageResult::StillAlive
-        }
+        };
+
+        log::info!("Health::take_damage: Took {} damage (new hp={}), outcome – {}", damage, self.hp, result);
+
+        result
     }
 }
