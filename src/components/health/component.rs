@@ -7,8 +7,10 @@ pub enum TakeDamageResult {
 }
 
 #[derive(Component)]
+#[require(Sprite, Transform)]
 pub struct Health {
     hp: u32,
+    max_hp: u32,
 }
 impl Health {
     #[inline]
@@ -19,10 +21,18 @@ impl Health {
     pub fn is_dead(&self) -> bool {
         self.hp == 0
     }
+    #[inline]
+    pub fn percent_ratio(&self) -> f32 {
+        if self.max_hp == 0 {
+            0.0
+        } else {
+            self.hp as f32 / self.max_hp as f32
+        }
+    }
 }
 impl Health {
     pub fn new(hp: u32) -> Self {
-        Self { hp }
+        Self { hp, max_hp: hp }
     }
 
     pub fn take_damage(&mut self, damage: u32) -> TakeDamageResult {
