@@ -13,7 +13,7 @@ use crate::shared::AppSystems;
 pub fn plugin(app: &mut App) {
     app.add_systems(Update, systems::update_healthbar.in_set(AppSystems::Update));
 
-    app.add_plugins(debug::plugin);
+    // app.add_plugins(debug::plugin);
 }
 
 mod debug {
