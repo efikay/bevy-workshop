@@ -9,8 +9,6 @@ mod marker;
 mod resource;
 mod systems;
 
-pub use marker::FpsLimiterText;
-
 pub fn plugin(app: &mut App) {
     app.add_plugins(FramepacePlugin);
 
