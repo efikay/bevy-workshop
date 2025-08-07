@@ -9,7 +9,7 @@ pub fn update_healthbar(
 ) {
     for (mut healthbar_transform, healthbar_sprite, child_of) in healthbar_query {
         if let Ok((health, mut _sprite, transform)) = carrier_query.get(child_of.parent()) {
-            // TODO: Respect carrier's Sprite-s .custom_size(of there's .image) -> .image.size
+            // TODO: Respect carrier's Sprite-s .custom_size(if there's .image) -> .image.size
             // TODO: Respect carrier's Transform (scale, rotation (when rect is being rotated it may overlap healthbar))
 
             // Setting healthbar width depending on how much HP left
