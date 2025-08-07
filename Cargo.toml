@@ -73,7 +73,7 @@ inspector__world = []
 inspector = [
   # "inspector__audio_mixer",
   # "inspector__app_pause_state",
-  # "inspector__creature",
+  "inspector__creature",
   "inspector__world",
 ]
 dev = [

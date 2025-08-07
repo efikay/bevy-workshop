@@ -11,6 +11,8 @@ pub use animation::{AnimationState, Animation};
 pub use movement::Movement;
 
 pub fn plugin(app: &mut App) {
+    app.register_type::<Movement>();
+
     app.add_systems(
         Update,
         (

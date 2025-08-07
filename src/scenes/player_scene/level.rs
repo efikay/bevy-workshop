@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    components::chess_floor,
+    // components::chess_floor,
     features::creature,
     screens::ScreenState,
     shared::data_structures::{ChunkToGrid, PrimitiveRect},
@@ -12,16 +12,16 @@ pub(super) fn plugin(_: &mut App) {
 }
 
 pub fn spawn_level(mut commands: Commands) {
-    for sprite_bundle in
-        chess_floor::bundles::make_sprite_bundles(chess_floor::config::ChessFloorConfig {
-            area: Rect::from_center_size(Vec2::ZERO, Vec2::new(2000.0, 2000.0)),
-            tile_size: 20.0,
-            ..Default::default()
-        })
-        .into_iter()
-    {
-        commands.spawn(sprite_bundle);
-    }
+    // for sprite_bundle in
+    //     chess_floor::bundles::make_sprite_bundles(chess_floor::config::ChessFloorConfig {
+    //         area: Rect::from_center_size(Vec2::ZERO, Vec2::new(2000.0, 2000.0)),
+    //         tile_size: 20.0,
+    //         ..Default::default()
+    //     })
+    //     .into_iter()
+    // {
+    //     commands.spawn(sprite_bundle);
+    // }
 
     commands.spawn(creature::CreatureConfig::player());
 

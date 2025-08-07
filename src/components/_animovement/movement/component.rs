@@ -5,7 +5,7 @@ use bevy::prelude::*;
 /// Basic movement component
 /// 
 /// Does not interact with other stuff except Bevy's Transform
-#[derive(Component)]
+#[derive(Component, Reflect)]
 pub struct Movement {
     pub intent: Vec2,
     pub max_speed: f32,

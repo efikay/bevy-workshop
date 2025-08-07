@@ -13,16 +13,22 @@ pub struct Animation {
     frame_grid: RangeDoubleMapper<AnimationState, DirectionAdvanced>,
 }
 impl Animation {
-    // TODO: Move from constant to struct field
     // TODO: Make configurable for each animation
-    const ANIMATION_INTERVAL: Duration = Duration::from_millis(200);
+    const DEFAULT_ANIMATION_INTERVAL: Duration = Duration::from_millis(200);
     // TODO: Move from constant to struct field
     const KEEP_DIRECTION_ON_IDLE: bool = true;
-
+}
+impl Animation {
     pub fn new(frame_grid: RangeDoubleMapper<AnimationState, DirectionAdvanced>) -> Self {
+        Self::new_with_animation_interval(frame_grid, Self::DEFAULT_ANIMATION_INTERVAL)
+    }
+    pub fn new_with_animation_interval(
+        frame_grid: RangeDoubleMapper<AnimationState, DirectionAdvanced>,
+        interval: Duration,
+    ) -> Self {
         Self {
-            timer: Timer::new(Self::ANIMATION_INTERVAL, TimerMode::Repeating),
             frame_grid,
+            timer: Timer::new(interval, TimerMode::Repeating),
         }
     }
 
@@ -34,6 +40,13 @@ impl Animation {
         }
 
         self.frame_grid.to_next();
+    }
+
+    pub fn idle_direction(&self) -> Option<DirectionAdvanced> {
+        match self.frame_grid.outer_key() {
+            AnimationState::Idle => Some(self.frame_grid.inner_key()),
+            AnimationState::Walk => None,
+        }
     }
 
     #[inline]

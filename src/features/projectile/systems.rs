@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use bevy::prelude::*;
 
 use crate::{
@@ -14,7 +16,11 @@ pub fn spawn_event_projectiles(
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
     for pending_projectile in events.read() {
-        let events::SendProjectile { from, speed, intent } = pending_projectile;
+        let events::SendProjectile {
+            from,
+            speed,
+            intent,
+        } = pending_projectile;
 
         let layout = TextureAtlasLayout::from_grid(UVec2::splat(128), 10, 6, None, None);
 
@@ -22,10 +28,14 @@ pub fn spawn_event_projectiles(
             Name::new("Projectile"),
             marker::Projectile,
             Movement {
-                intent: intent.floor(),
+                // Maximizing the intent for maximum speed mult
+                intent: Vec2::from_angle(intent.to_angle()),
                 max_speed: *speed,
             },
-            Animation::new(RangeDoubleMapper::new(|_| |_| 0..60)),
+            Animation::new_with_animation_interval(
+                RangeDoubleMapper::new(|_| |_| 0..6),
+                Duration::from_millis(30),
+            ),
             Sprite {
                 image: asset_server
                     .load("sprites/effects/magic/magic-bolts/fireball/tile_map2.png"),
@@ -37,7 +47,7 @@ pub fn spawn_event_projectiles(
             },
             Transform {
                 translation: from.translation,
-                rotation: Quat::IDENTITY,
+                rotation: Quat::from_rotation_z(intent.to_angle()),
                 scale: Vec3::splat(2.0),
             },
         ));

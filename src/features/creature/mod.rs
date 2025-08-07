@@ -38,5 +38,6 @@ pub fn plugin(app: &mut App) {
         use bevy_inspector_egui::quick::FilterQueryInspectorPlugin;
 
         app.add_plugins(FilterQueryInspectorPlugin::<With<markers::Creature>>::default());
+        app.add_plugins(FilterQueryInspectorPlugin::<With<markers::creature_type::Player>>::default());
     }
 }

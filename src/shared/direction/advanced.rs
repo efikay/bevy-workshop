@@ -1,13 +1,12 @@
 #![allow(dead_code)]
 
-use bevy::math::Vec2;
-use std::f32;
+use bevy::{math::Vec2, reflect::Reflect};
 
 use crate::shared::utils::vec2::vec2_to_normalized_degrees;
 
 use super::DirectionSimple;
 
-#[derive(Debug, PartialEq, Eq, Copy, Clone, Default, Hash)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, Default, Hash, Reflect)]
 pub enum DirectionAdvanced {
     North,
     NorthEast,
@@ -53,6 +52,20 @@ impl DirectionAdvanced {
             DirectionAdvanced::SouthWest => DirectionSimple::West,
             DirectionAdvanced::West => DirectionSimple::West,
             DirectionAdvanced::NorthWest => DirectionSimple::North,
+        }
+    }
+
+    pub fn to_max_intent(&self) -> Vec2 {
+        match self  {
+            DirectionAdvanced::North => Vec2::new(0.0, 1.0),
+            DirectionAdvanced::East => Vec2::new(1.0, 0.0),
+            DirectionAdvanced::South => Vec2::new(0.0, -1.0),
+            DirectionAdvanced::West => Vec2::new(-1.0, 0.0),
+            // TODO: Make like "0.6" or so? The're diagonal
+            DirectionAdvanced::NorthEast => Vec2::new(1.0, 1.0),
+            DirectionAdvanced::SouthEast => Vec2::new(1.0, -1.0), //
+            DirectionAdvanced::SouthWest => Vec2::new(-1.0, -1.0),
+            DirectionAdvanced::NorthWest => Vec2::new(-1.0, 1.0),
         }
     }
 }

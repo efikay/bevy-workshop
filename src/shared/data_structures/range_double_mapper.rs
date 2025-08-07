@@ -3,9 +3,13 @@
 use core::hash::Hash;
 use std::{collections::HashMap, ops::Range};
 
-#[derive(Debug, Clone, Copy)]
+use bevy::reflect::Reflect;
+
+type GridFn<KOuter, KInner> = fn(outer_key: &KOuter) -> fn(inner_fn: &KInner) -> Range<u8>;
+
+#[derive(Reflect, Debug, Clone, Copy)]
 pub struct RangeDoubleMapper<KOuter, KInner> {
-    grid_fn: fn(outer_key: &KOuter) -> fn(inner_fn: &KInner) -> Range<u8>,
+    grid_fn: GridFn<KOuter, KInner>,
 
     outer_key: KOuter,
     inner_key: KInner,
@@ -16,7 +20,7 @@ where
     KOuter: PartialEq + Default + Copy + Clone,
     KInner: PartialEq + Default + Copy + Clone,
 {
-    pub fn new(grid_fn: fn(outer_key: &KOuter) -> fn(inner_fn: &KInner) -> Range<u8>) -> Self {
+    pub fn new(grid_fn: GridFn<KOuter, KInner>) -> Self {
         let outer_key = KOuter::default();
         let inner_key = KInner::default();
 

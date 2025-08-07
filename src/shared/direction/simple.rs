@@ -2,8 +2,6 @@ use bevy::math::Vec2;
 
 use crate::shared::utils::vec2::vec2_to_normalized_degrees;
 
-use super::advanced::DirectionAdvanced;
-
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Default, Hash)]
 pub enum DirectionSimple {
     North,
@@ -26,6 +24,17 @@ impl From<Vec2> for DirectionSimple {
             }
         } else {
             Self::default()
+        }
+    }
+}
+
+impl DirectionSimple {
+    pub fn to_max_intent(&self) -> Vec2 {
+        match self {
+            DirectionSimple::North => Vec2::new(0.0, 1.0),
+            DirectionSimple::East => Vec2::new(1.0, 0.0),
+            DirectionSimple::South => Vec2::new(0.0, -1.0),
+            DirectionSimple::West => Vec2::new(-1.0, 0.0),
         }
     }
 }
