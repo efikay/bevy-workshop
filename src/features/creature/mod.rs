@@ -7,7 +7,7 @@ mod markers;
 mod systems;
 
 use crate::{
-    components::{_animovement, camera_targeting},
+    components::{_animovement, camera_targeting, health},
     features::projectile,
     shared::{AppSystems, PausableAppSystems},
 };
@@ -18,6 +18,7 @@ pub fn plugin(app: &mut App) {
     app.add_plugins(_animovement::plugin);
     app.add_plugins(camera_targeting::plugin);
     app.add_plugins(projectile::plugin);
+    app.add_plugins(health::plugin);
 
     app.add_systems(
         Update,

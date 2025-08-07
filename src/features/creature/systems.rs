@@ -9,6 +9,7 @@ use super::markers::{
 };
 use crate::components::_animovement::{Animation, Movement};
 use crate::components::camera_targeting::marker::CameraTarget;
+use crate::components::health::{healthbar_bundle, Health};
 use crate::features;
 use crate::features::creature::config;
 use crate::features::projectile::events::SendProjectile;
@@ -44,8 +45,10 @@ pub fn unpack_creature_configs(
                     }),
                     ..default()
                 },
+                Health::new(config.hp),
                 Animation::new(config.atlas_grid_mapper.clone()),
                 config.initial_transform,
+                children![healthbar_bundle()]
             ))
             .insert_if(CameraTarget, || config.is_camera_target)
             .insert_if(WASD, || config.is_controlled)

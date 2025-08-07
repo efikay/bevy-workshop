@@ -6,7 +6,7 @@ pub enum TakeDamageResult {
     StillAlive,
 }
 
-#[derive(Component)]
+#[derive(Component, Reflect)]
 #[require(Sprite, Transform)]
 pub struct Health {
     hp: u32,
@@ -23,7 +23,7 @@ impl Health {
     }
     #[inline]
     pub fn percent_ratio(&self) -> f32 {
-        if self.max_hp == 0 {
+        if self.max_hp == 0 || self.hp == 0 {
             0.0
         } else {
             self.hp as f32 / self.max_hp as f32

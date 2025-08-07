@@ -30,6 +30,7 @@ pub struct CreatureConfig {
     pub is_camera_target: bool,
     pub creature_type: CreatureType,
     pub initial_transform: Transform,
+    pub hp: u32, // it's also max_hp for now
 }
 
 impl CreatureConfig {
@@ -56,6 +57,7 @@ impl CreatureConfig {
             is_controlled: true,
             is_camera_target: true,
             creature_type: CreatureType::Player,
+            hp: 300,
             initial_transform: Transform::from_xyz(0.0, 0.0, ZLevel::Ground.into())
                 .with_scale(Vec3::new(4.0, 4.0, 4.0)),
         }
@@ -87,6 +89,7 @@ impl CreatureConfig {
             is_controlled: false,
             is_camera_target: false,
             creature_type: CreatureType::EnemyNPC,
+            hp: 200,
             initial_transform: Transform::from_translation(
                 initial_position.extend(ZLevel::Ground.into()),
             )

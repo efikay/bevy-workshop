@@ -14,5 +14,6 @@ pub fn healthbar_bundle() -> impl Bundle {
             )),
             ..default()
         },
+        GlobalZIndex(2)
     )
 }
