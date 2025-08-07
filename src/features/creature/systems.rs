@@ -64,37 +64,9 @@ pub fn unpack_creature_configs(
     }
 }
 
-pub fn record_creature_wasd_input(
-    input: Res<ButtonInput<KeyCode>>,
-    mut creature_query: Query<&mut Movement, With<WASD>>,
-) {
-    // Collect directional input.
-    let mut intent = Vec2::ZERO;
-    if input.pressed(KeyCode::KeyW) || input.pressed(KeyCode::ArrowUp) {
-        intent.y += 1.0;
-    }
-    if input.pressed(KeyCode::KeyS) || input.pressed(KeyCode::ArrowDown) {
-        intent.y -= 1.0;
-    }
-    if input.pressed(KeyCode::KeyA) || input.pressed(KeyCode::ArrowLeft) {
-        intent.x -= 1.0;
-    }
-    if input.pressed(KeyCode::KeyD) || input.pressed(KeyCode::ArrowRight) {
-        intent.x += 1.0;
-    }
-
-    // Normalize intent so that diagonal movement is the same speed as horizontal / vertical.
-    // This should be omitted if the input comes from an analog stick instead.
-    let intent = intent.normalize_or_zero();
-
-    // Apply movement intent to controllers.
-    for mut movement in &mut creature_query {
-        movement.intent = intent;
-    }
-}
-
 pub fn record_player_action_input(
-    input: Res<ButtonInput<KeyCode>>,
+    kbd: Res<ButtonInput<KeyCode>>,
+    gamepad: Query<&Gamepad>,
     player: Single<(&Transform, &Movement, &Animation), With<Player>>,
     mut writer: EventWriter<SendProjectile>,
 ) {
@@ -102,11 +74,14 @@ pub fn record_player_action_input(
     let movement = player.1;
     let animation = player.2;
 
-    if input.just_pressed(KeyCode::KeyE) {
+    if kbd.just_pressed(KeyCode::KeyE)
+        || gamepad
+            .iter()
+            .next()
+            .is_some_and(|g| g.pressed(GamepadButton::South))
+    {
         let intent = match animation.idle_direction() {
-            Some(direction) => {
-                direction.to_max_intent()
-            },
+            Some(direction) => direction.to_max_intent(),
             // We're still moving then
             None => movement.intent,
         };
@@ -116,44 +91,5 @@ pub fn record_player_action_input(
             from: transform.clone(),
             speed: SendProjectile::BLAZINGLY_FAST,
         });
-    }
-}
-
-pub fn record_creature_gamepad_movement_input(
-    gamepads: Query<&Gamepad>,
-    mut creature: Query<&mut Movement, With<WASD>>,
-) {
-    const MIN_AXIS_SENSITIVITY: f32 = 0.2;
-
-    for gamepad in &gamepads {
-        // Collect directional input.
-        let mut intent = Vec2::ZERO;
-        if gamepad.pressed(GamepadButton::DPadUp) {
-            intent.y += 1.0;
-        }
-        if gamepad.pressed(GamepadButton::DPadDown) {
-            intent.y -= 1.0;
-        }
-        if gamepad.pressed(GamepadButton::DPadLeft) {
-            intent.x -= 1.0;
-        }
-        if gamepad.pressed(GamepadButton::DPadRight) {
-            intent.x += 1.0;
-        }
-
-        if let Some(left_stick_x) = gamepad.get(GamepadAxis::LeftStickX) {
-            if left_stick_x.abs() > MIN_AXIS_SENSITIVITY {
-                intent.x += left_stick_x;
-            }
-        }
-        if let Some(left_stick_y) = gamepad.get(GamepadAxis::LeftStickY) {
-            if left_stick_y.abs() > MIN_AXIS_SENSITIVITY {
-                intent.y += left_stick_y;
-            }
-        }
-
-        for mut movement in &mut creature {
-            movement.intent = intent.clamp(Vec2::NEG_ONE, Vec2::ONE);
-        }
     }
 }

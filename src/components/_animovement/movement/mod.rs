@@ -1,5 +1,5 @@
 mod component;
 
-pub mod system;
+pub mod systems;
 
 pub use component::Movement;

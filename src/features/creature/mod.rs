@@ -7,7 +7,7 @@ mod markers;
 mod systems;
 
 use crate::{
-    components::{camera_targeting, _animovement},
+    components::{_animovement, camera_targeting},
     features::projectile,
     shared::{AppSystems, PausableAppSystems},
 };
@@ -22,12 +22,7 @@ pub fn plugin(app: &mut App) {
     app.add_systems(
         Update,
         (
-            (
-                systems::record_creature_wasd_input,
-                systems::record_creature_gamepad_movement_input,
-                systems::record_player_action_input,
-            )
-                .in_set(AppSystems::RecordInput),
+            systems::record_player_action_input.in_set(AppSystems::RecordInput),
             systems::unpack_creature_configs.in_set(AppSystems::Update),
         )
             .in_set(PausableAppSystems),
@@ -38,6 +33,8 @@ pub fn plugin(app: &mut App) {
         use bevy_inspector_egui::quick::FilterQueryInspectorPlugin;
 
         app.add_plugins(FilterQueryInspectorPlugin::<With<markers::Creature>>::default());
-        app.add_plugins(FilterQueryInspectorPlugin::<With<markers::creature_type::Player>>::default());
+        app.add_plugins(FilterQueryInspectorPlugin::<
+            With<markers::creature_type::Player>,
+        >::default());
     }
 }
