@@ -5,7 +5,7 @@ use bevy::{
 };
 use bevy_rapier2d::prelude::*;
 
-use crate::{screens::ScreenState, shared::AppPauseState};
+use crate::{components::fps_counter, screens::ScreenState, shared::AppPauseState};
 
 const TOGGLE_KEY: KeyCode = KeyCode::KeyZ;
 
@@ -17,6 +17,8 @@ pub(super) fn plugin(app: &mut App) {
     app.add_plugins(inspector_plugins);
 
     app.add_plugins(RapierDebugRenderPlugin::default());
+
+    app.add_plugins(fps_counter::plugin);
 
     // Toggle the debug overlay for UI.
     app.add_systems(
