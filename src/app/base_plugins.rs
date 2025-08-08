@@ -3,7 +3,7 @@ use bevy::{
     prelude::*,
     window::{CursorOptions, WindowMode},
 };
-use bevy_rapier2d::prelude::*;
+use bevy_rapier2d::{prelude::*, rapier::prelude::IntegrationParameters};
 
 use crate::shared::{AppPauseState, AppSystems, PausableAppSystems};
 
@@ -16,8 +16,7 @@ impl Plugin for BasePlugins {
                 .set(Self::asset_plugin())
                 .set(ImagePlugin::default_nearest())
                 .set(Self::window_plugin()),
-        )
-        .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0));
+        );
 
         // Order new `AppSystems` variants by adding them here:
         app.configure_sets(Update, AppSystems::system_set().chain());
@@ -32,13 +31,14 @@ impl Plugin for BasePlugins {
 
         app.add_systems(Startup, Self::spawn_camera);
 
+        Self::attach_rapier2d_physics_plugin(app);
         Self::set_clear_color(app);
 
-        #[cfg(feature = "dev")]
-        {
-            app.add_systems(Startup, debug::setup_physics);
-            app.add_systems(Update, debug::print_ball_altitude);
-        }
+        // #[cfg(feature = "dev")]
+        // {
+        //     app.add_systems(Startup, debug::setup_physics);
+        //     app.add_systems(Update, debug::print_ball_altitude);
+        // }
     }
 }
 
@@ -47,6 +47,21 @@ impl BasePlugins {
 
     fn set_clear_color(app: &mut App) {
         app.insert_resource(ClearColor(Self::CLEAR_COLOR));
+    }
+
+    fn attach_rapier2d_physics_plugin(app: &mut App) {
+        app.add_plugins(RapierPhysicsPlugin::with_custom_initialization(
+            RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0),
+            RapierContextInitialization::InitializeDefaultRapierContext {
+                integration_parameters: IntegrationParameters::default(),
+                rapier_configuration: RapierConfiguration {
+                    gravity: Vec2::ZERO,
+                    physics_pipeline_active: true,
+                    scaled_shape_subdivision: 10,
+                    force_update_from_transform_changes: false,
+                },
+            },
+        ));
     }
 
     fn spawn_camera(mut commands: Commands) {
@@ -76,6 +91,8 @@ impl BasePlugins {
 }
 
 mod debug {
+    #![allow(dead_code)]
+
     use super::*;
 
     pub fn setup_physics(mut commands: Commands) {
