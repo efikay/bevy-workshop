@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+use avian2d::prelude::*;
 use bevy::input::gamepad::GamepadConnection;
 use bevy::{input::gamepad::GamepadEvent, prelude::*};
 
@@ -9,7 +10,7 @@ use super::markers::{
 };
 use crate::components::_animovement::{Animation, Movement};
 use crate::components::camera_targeting::marker::CameraTarget;
-use crate::components::health::{healthbar_bundle, Health};
+use crate::components::health::{Health, healthbar_bundle};
 use crate::features;
 use crate::features::creature::config;
 use crate::features::projectile::events::SendProjectile;
@@ -31,8 +32,8 @@ pub fn unpack_creature_configs(
     mut commands: Commands,
 ) {
     for (config, entity) in configs_query {
-        commands
-            .entity(entity)
+        let mut entity_commands = commands.entity(entity);
+        entity_commands
             .remove::<config::CreatureConfig>()
             .insert((
                 Creature,
@@ -48,22 +49,18 @@ pub fn unpack_creature_configs(
                 Health::new(config.hp),
                 Animation::new(config.atlas_grid_mapper.clone()),
                 config.initial_transform,
-                children![healthbar_bundle()]
+                children![healthbar_bundle()],
             ))
+            .insert((RigidBody::Static, Collider::rectangle(16.0, 30.0)))
             .insert_if(CameraTarget, || config.is_camera_target)
-            .insert_if(WASD, || config.is_controlled)
-            .insert_if(Player, || {
-                config.creature_type == config::CreatureType::Player
-            })
-            .insert_if(EnemyNPC, || {
-                config.creature_type == config::CreatureType::EnemyNPC
-            })
-            .insert_if(FriendNPC, || {
-                config.creature_type == config::CreatureType::FriendNPC
-            })
-            .insert_if(NeutralNPC, || {
-                config.creature_type == config::CreatureType::NeutralNPC
-            });
+            .insert_if(WASD, || config.is_controlled);
+
+        match config.creature_type {
+            config::CreatureType::Player => entity_commands.insert(Player),
+            config::CreatureType::EnemyNPC => entity_commands.insert(EnemyNPC),
+            config::CreatureType::FriendNPC => entity_commands.insert(FriendNPC),
+            config::CreatureType::NeutralNPC => entity_commands.insert(NeutralNPC),
+        };
     }
 }
 
