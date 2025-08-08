@@ -13,7 +13,7 @@ use crate::components::camera_targeting::marker::CameraTarget;
 use crate::components::health::{Health, healthbar_bundle};
 use crate::features;
 use crate::features::creature::config;
-use crate::features::projectile::events::SendProjectile;
+use crate::features::projectile::events::{SendProjectile, SendProjectilesAround};
 use crate::shared::common_markers::WASD;
 use crate::shared::data_structures::{ChunkToGrid, PrimitiveRect};
 use crate::shared::z_levels::ZLevel;
@@ -69,7 +69,7 @@ pub fn unpack_creature_configs(
     }
 }
 
-pub fn record_player_action_input(
+pub fn record_player_fireball_input(
     kbd: Res<ButtonInput<KeyCode>>,
     gamepad: Query<&Gamepad>,
     player: Single<(&Transform, &Movement, &Animation), With<Player>>,
@@ -96,6 +96,27 @@ pub fn record_player_action_input(
             from: transform.clone(),
             speed: SendProjectile::ITS_OK,
             damage: SendProjectile::D_MINOR,
+        });
+    }
+}
+
+pub fn record_player_fireballs_around_input(
+    kbd: Res<ButtonInput<KeyCode>>,
+    gamepad: Query<&Gamepad>,
+    transform: Single<&Transform, With<Player>>,
+    mut writer: EventWriter<SendProjectilesAround>,
+) {
+    if kbd.just_pressed(KeyCode::KeyR)
+        || gamepad
+            .iter()
+            .next()
+            .is_some_and(|g| g.pressed(GamepadButton::North))
+    {
+        writer.write(SendProjectilesAround {
+            from: transform.clone(),
+            speed: SendProjectile::BLAZINGLY_FAST,
+            damage: SendProjectile::D_MINOR,
+            projectiles_amount: 20,
         });
     }
 }

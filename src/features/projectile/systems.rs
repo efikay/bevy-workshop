@@ -3,7 +3,10 @@ use std::time::Duration;
 use avian2d::prelude::*;
 use bevy::prelude::*;
 
-use crate::{components::_animovement::Animation, shared::data_structures::RangeDoubleMapper};
+use crate::{
+    components::_animovement::Animation,
+    shared::{data_structures::RangeDoubleMapper, utils::radian},
+};
 
 use super::*;
 
@@ -58,4 +61,34 @@ pub fn spawn_event_projectiles(
             ))
             .observe(observer::observe_collision_with_creature);
     }
+}
+
+pub fn spawn_projectiles_around_from_event(
+    mut events: EventReader<events::SendProjectilesAround>,
+    mut writer: EventWriter<events::SendProjectile>,
+) {
+    let mut events_to_send: Vec<events::SendProjectile> = vec![];
+
+    for events::SendProjectilesAround {
+        from,
+        speed,
+        damage,
+        projectiles_amount,
+    } in events.read()
+    {
+        let intents = radian::generate_evenly_spaced_directions(*projectiles_amount as usize)
+            .into_iter()
+            .map(Vec2::from_angle);
+
+        for intent in intents {
+            events_to_send.push(events::SendProjectile {
+                intent,
+                from: *from,
+                speed: *speed,
+                damage: *damage,
+            });
+        }
+    }
+
+    writer.write_batch(events_to_send);
 }

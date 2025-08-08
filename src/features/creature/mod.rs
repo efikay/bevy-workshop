@@ -23,7 +23,11 @@ pub fn plugin(app: &mut App) {
     app.add_systems(
         Update,
         (
-            systems::record_player_action_input.in_set(AppSystems::RecordInput),
+            (
+                systems::record_player_fireball_input,
+                systems::record_player_fireballs_around_input,
+            )
+                .in_set(AppSystems::RecordInput),
             systems::unpack_creature_configs.in_set(AppSystems::Update),
         )
             .in_set(PausableAppSystems),

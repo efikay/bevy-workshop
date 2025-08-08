@@ -38,16 +38,16 @@ impl CreatureConfig {
         use AnimationState as AnimState;
 
         Self {
-            atlas_sprite_path: String::from("sprites/character/male/idle+walk.png"),
+            atlas_sprite_path: String::from("sprites/character/female/idle+walk.png"),
             atlas_layout: TextureAtlasLayout::from_grid(UVec2::new(48, 64), 8, 12, None, None),
             atlas_grid_mapper: RangeDoubleMapper::new(|animation_state| match animation_state {
-                AnimState::Walk => |direction| match direction.to_simple_lossy() {
+                AnimState::Idle => |direction| match direction.to_simple_lossy() {
                     DirectionSimple::North => 24..32,
                     DirectionSimple::South => 0..8,
                     DirectionSimple::East => 40..48,
                     DirectionSimple::West => 8..16,
                 },
-                AnimState::Idle => |direction| match direction.to_simple_lossy() {
+                AnimState::Walk => |direction| match direction.to_simple_lossy() {
                     DirectionSimple::North => 72..80,
                     DirectionSimple::South => 48..56,
                     DirectionSimple::East => 88..96,
@@ -70,16 +70,16 @@ impl CreatureConfig {
         let rows = 12;
 
         Self {
-            atlas_sprite_path: String::from("sprites/character/female/idle+walk.png"),
+            atlas_sprite_path: String::from("sprites/character/male/idle+walk.png"),
             atlas_layout: TextureAtlasLayout::from_grid(UVec2::new(48, 64), cols, rows, None, None),
             atlas_grid_mapper: RangeDoubleMapper::new(|animation_state| match animation_state {
-                AnimState::Idle => |direction| match direction.to_simple_lossy() {
+                AnimState::Walk => |direction| match direction.to_simple_lossy() {
                     DirectionSimple::North => 24..32,
                     DirectionSimple::South => 0..8,
                     DirectionSimple::East => 40..48,
                     DirectionSimple::West => 8..16,
                 },
-                AnimState::Walk => |direction| match direction.to_simple_lossy() {
+                AnimState::Idle => |direction| match direction.to_simple_lossy() {
                     DirectionSimple::North => 72..80,
                     DirectionSimple::South => 48..56,
                     DirectionSimple::East => 88..96,
