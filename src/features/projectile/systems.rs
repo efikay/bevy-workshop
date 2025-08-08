@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::*;
+use bevy_rapier2d::{prelude::*, rapier::prelude::RigidBodyVelocity};
 
 use crate::{
     components::_animovement::{Animation, Movement},
@@ -55,9 +55,28 @@ pub fn spawn_event_projectiles(
             ))
             // Physics
             .insert((
+                // Doesn't work even if you remove Movement component. TODO: make it work
+                Velocity::linear(Vec2::from_angle(intent.to_angle()) * *speed),
                 RigidBody::Fixed,
+                Sensor,
                 Collider::cuboid(10.0, 10.0),
                 Restitution::coefficient(1.0),
             ));
+    }
+}
+
+pub mod debug {
+    use super::*;
+
+    pub fn remove_all_projectiles_by_event(
+        mut commands: Commands,
+        mut events: EventReader<events::debug::RemoveAllProjectiles>,
+        projectiles: Query<Entity, With<marker::Projectile>>,
+    ) {
+        for _ in events.read() {
+            for projectile_entity in projectiles {
+                commands.entity(projectile_entity).despawn();
+            }
+        }
     }
 }

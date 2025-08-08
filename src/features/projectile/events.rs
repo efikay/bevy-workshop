@@ -17,3 +17,10 @@ impl SendProjectile {
     pub const ITS_OK: f32 = 100.;
     pub const BLAZINGLY_FAST: f32 = 1000.;
 }
+
+pub mod debug {
+    use super::*;
+
+    #[derive(Event, Reflect)]
+    pub struct RemoveAllProjectiles;
+}

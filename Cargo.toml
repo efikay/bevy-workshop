@@ -72,12 +72,14 @@ inspector__audio_mixer = []
 inspector__creature = []
 inspector__world = []
 inspector__health = []
+inspector__projectile = []
 inspector = [
   # "inspector__audio_mixer",
   # "inspector__app_pause_state",
   # "inspector__world",
-  "inspector__creature",
-  "inspector__health",
+  # "inspector__creature",
+  # "inspector__health",
+  "inspector__projectile",
 ]
 dev = [
   "bevy/bevy_dev_tools",
