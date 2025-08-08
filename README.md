@@ -11,5 +11,5 @@ Just hanging around.
 
 ## Fireballs 🔥 👀 ⬇️
 
-☄️ ☄️ ☄️
+☄️ ☄️ ☄️ <br />
 ![Fireballs around!](./showcase_demos/demo_fireballs.gif)
