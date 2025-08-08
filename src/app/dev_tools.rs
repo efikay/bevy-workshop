@@ -3,6 +3,7 @@
 use bevy::{
     dev_tools::states::log_transitions, input::common_conditions::input_just_pressed, prelude::*,
 };
+use bevy_rapier2d::prelude::*;
 
 use crate::{screens::ScreenState, shared::AppPauseState};
 
@@ -14,6 +15,8 @@ pub(super) fn plugin(app: &mut App) {
 
     #[cfg(feature = "inspector")]
     app.add_plugins(inspector_plugins);
+
+    app.add_plugins(RapierDebugRenderPlugin::default());
 
     // Toggle the debug overlay for UI.
     app.add_systems(
