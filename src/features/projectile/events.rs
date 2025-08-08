@@ -6,6 +6,7 @@ pub struct SendProjectile {
     /// Must be non-zero
     pub intent: Vec2,
     pub speed: f32,
+    pub is_ghost: bool,
     // pub place_in: Option<Entity>,
     // pub despawn_after: Option<Duration>,
 }
@@ -20,6 +21,15 @@ impl SendProjectile {
 
 pub mod debug {
     use super::*;
+
+    /// FIRE PROJECTILES IN ALL DIRECTIONS! HELL YEAH!
+    /// ☄️☄️☄️
+    /// ☄️🚁☄️
+    /// ☄️☄️☄️
+    #[derive(Event, Reflect)]
+    pub struct CastFireNova {
+        pub from: Transform,
+    }
 
     #[derive(Event, Reflect)]
     pub struct RemoveAllProjectiles;

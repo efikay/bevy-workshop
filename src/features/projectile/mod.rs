@@ -5,6 +5,8 @@ pub mod events;
 mod marker;
 mod systems;
 
+#[cfg(feature = "dev")]
+
 pub fn plugin(app: &mut App) {
     app.add_event::<events::SendProjectile>();
     app.register_type::<events::SendProjectile>();
@@ -25,10 +27,16 @@ mod debug {
         app.add_plugins(FilterQueryInspectorPlugin::<With<marker::Projectile>>::default());
 
         app.add_event::<events::debug::RemoveAllProjectiles>();
+        app.add_event::<events::debug::CastFireNova>();
 
         app.add_systems(Update, display_events);
+        app.add_systems(
+            Update,
+            systems::debug::toggle_projectiles_body_type.run_if(input_just_pressed(KeyCode::KeyT)),
+        );
 
         app.add_systems(Update, systems::debug::remove_all_projectiles_by_event);
+        app.add_systems(Update, systems::debug::CAST_FIRE_NOVA_by_event);
         app.add_systems(
             Update,
             remove_all_projectiles.run_if(input_just_pressed(KeyCode::Enter)),

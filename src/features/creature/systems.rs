@@ -13,7 +13,7 @@ use crate::components::camera_targeting::marker::CameraTarget;
 use crate::components::health::{Health, healthbar_bundle};
 use crate::features;
 use crate::features::creature::config;
-use crate::features::projectile::events::SendProjectile;
+use crate::features::projectile::events::{SendProjectile, debug};
 use crate::shared::common_markers::WASD;
 use crate::shared::data_structures::{ChunkToGrid, PrimitiveRect};
 use crate::shared::z_levels::ZLevel;
@@ -82,7 +82,8 @@ pub fn record_player_action_input(
     kbd: Res<ButtonInput<KeyCode>>,
     gamepad: Query<&Gamepad>,
     player: Single<(&Transform, &Movement, &Animation), With<Player>>,
-    mut writer: EventWriter<SendProjectile>,
+    #[cfg(not(feature = "dev"))] mut writer: EventWriter<SendProjectile>,
+    #[cfg(feature = "dev")] mut writer: EventWriter<debug::CastFireNova>,
 ) {
     let transform = player.0;
     let movement = player.1;
@@ -94,16 +95,26 @@ pub fn record_player_action_input(
             .next()
             .is_some_and(|g| g.pressed(GamepadButton::South))
     {
-        let intent = match animation.idle_direction() {
-            Some(direction) => direction.to_max_intent(),
-            // We're still moving then
-            None => movement.intent,
-        };
+        // Not a dev? So, so, so so so sad...
+        #[cfg(not(feature = "dev"))]
+        {
+            let intent = match animation.idle_direction() {
+                Some(direction) => direction.to_max_intent(),
+                // We're still moving then
+                None => movement.intent,
+            };
 
-        writer.write(SendProjectile {
-            intent,
+            writer.write(SendProjectile {
+                intent,
+                from: transform.clone(),
+                is_ghost: true,
+                speed: SendProjectile::BLAZINGLY_FAST,
+            });
+        }
+        // True power!
+        #[cfg(feature = "dev")]
+        writer.write(debug::CastFireNova {
             from: transform.clone(),
-            speed: SendProjectile::BLAZINGLY_FAST,
         });
     }
 }

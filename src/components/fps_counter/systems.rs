@@ -10,7 +10,11 @@ use super::*;
 
 pub fn setup(mut commands: Commands) {
     commands
-        .spawn((Text::new("FPS: "), markers::FpsCounterText))
+        .spawn((
+            Text::new("FPS: "),
+            markers::FpsCounterText,
+            GlobalZIndex(i32::MAX),
+        ))
         .with_child((
             TextSpan::default(),
             TextColor(GOLD.into()),
