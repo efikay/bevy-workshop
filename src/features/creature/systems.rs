@@ -92,7 +92,7 @@ pub fn record_player_action_input(
         writer.write(SendProjectile {
             intent,
             from: transform.clone(),
-            speed: SendProjectile::BLAZINGLY_FAST,
+            speed: SendProjectile::ITS_OK,
         });
     }
 }
