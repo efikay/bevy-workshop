@@ -43,6 +43,8 @@ bevy = { version = "0.16.1", features = [
 bevy_seedling = { version = "0.4", features = ["mp3", "flac"] }
 bevy-inspector-egui = "0.32"
 
+avian2d = "0.3"
+
 rand = "0.9.2"
 
 # Better enums

@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+use avian2d::prelude::*;
 use bevy::input::gamepad::GamepadConnection;
 use bevy::{input::gamepad::GamepadEvent, prelude::*};
 
@@ -9,10 +10,10 @@ use super::markers::{
 };
 use crate::components::_animovement::{Animation, Movement};
 use crate::components::camera_targeting::marker::CameraTarget;
-use crate::components::health::{healthbar_bundle, Health};
+use crate::components::health::{Health, healthbar_bundle};
 use crate::features;
 use crate::features::creature::config;
-use crate::features::projectile::events::SendProjectile;
+use crate::features::projectile::events::{SendProjectile, SendProjectilesAround};
 use crate::shared::common_markers::WASD;
 use crate::shared::data_structures::{ChunkToGrid, PrimitiveRect};
 use crate::shared::z_levels::ZLevel;
@@ -31,8 +32,9 @@ pub fn unpack_creature_configs(
     mut commands: Commands,
 ) {
     for (config, entity) in configs_query {
-        commands
-            .entity(entity)
+        let mut entity_commands = commands.entity(entity);
+
+        entity_commands
             .remove::<config::CreatureConfig>()
             .insert((
                 Creature,
@@ -48,26 +50,26 @@ pub fn unpack_creature_configs(
                 Health::new(config.hp),
                 Animation::new(config.atlas_grid_mapper.clone()),
                 config.initial_transform,
-                children![healthbar_bundle()]
+                children![healthbar_bundle()],
+            ))
+            .insert((
+                RigidBody::Dynamic,
+                Mass::ZERO,
+                Collider::rectangle(16.0, 30.0),
             ))
             .insert_if(CameraTarget, || config.is_camera_target)
-            .insert_if(WASD, || config.is_controlled)
-            .insert_if(Player, || {
-                config.creature_type == config::CreatureType::Player
-            })
-            .insert_if(EnemyNPC, || {
-                config.creature_type == config::CreatureType::EnemyNPC
-            })
-            .insert_if(FriendNPC, || {
-                config.creature_type == config::CreatureType::FriendNPC
-            })
-            .insert_if(NeutralNPC, || {
-                config.creature_type == config::CreatureType::NeutralNPC
-            });
+            .insert_if(WASD, || config.is_controlled);
+
+        match config.creature_type {
+            config::CreatureType::Player => entity_commands.insert(Player),
+            config::CreatureType::EnemyNPC => entity_commands.insert(EnemyNPC),
+            config::CreatureType::FriendNPC => entity_commands.insert(FriendNPC),
+            config::CreatureType::NeutralNPC => entity_commands.insert(NeutralNPC),
+        };
     }
 }
 
-pub fn record_player_action_input(
+pub fn record_player_fireball_input(
     kbd: Res<ButtonInput<KeyCode>>,
     gamepad: Query<&Gamepad>,
     player: Single<(&Transform, &Movement, &Animation), With<Player>>,
@@ -92,7 +94,29 @@ pub fn record_player_action_input(
         writer.write(SendProjectile {
             intent,
             from: transform.clone(),
+            speed: SendProjectile::ITS_OK,
+            damage: SendProjectile::D_MINOR,
+        });
+    }
+}
+
+pub fn record_player_fireballs_around_input(
+    kbd: Res<ButtonInput<KeyCode>>,
+    gamepad: Query<&Gamepad>,
+    transform: Single<&Transform, With<Player>>,
+    mut writer: EventWriter<SendProjectilesAround>,
+) {
+    if kbd.just_pressed(KeyCode::KeyR)
+        || gamepad
+            .iter()
+            .next()
+            .is_some_and(|g| g.pressed(GamepadButton::North))
+    {
+        writer.write(SendProjectilesAround {
+            from: transform.clone(),
             speed: SendProjectile::BLAZINGLY_FAST,
+            damage: SendProjectile::D_MINOR,
+            projectiles_amount: 20,
         });
     }
 }

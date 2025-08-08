@@ -1,3 +1,4 @@
+use avian2d::prelude::*;
 use bevy::{
     asset::AssetMetaCheck,
     prelude::*,
@@ -28,9 +29,10 @@ impl Plugin for BasePlugins {
             PausableAppSystems.run_if(in_state(AppPauseState(false))),
         );
 
-        app.add_systems(Startup, Self::spawn_camera);
-
+        Self::add_physics_plugin(app);
         Self::set_clear_color(app);
+
+        app.add_systems(Startup, Self::spawn_camera);
     }
 }
 
@@ -39,6 +41,15 @@ impl BasePlugins {
 
     fn set_clear_color(app: &mut App) {
         app.insert_resource(ClearColor(Self::CLEAR_COLOR));
+    }
+
+    fn add_physics_plugin(app: &mut App) {
+        app.add_plugins(PhysicsPlugins::default());
+
+        // Disable gravity
+        app.add_systems(Startup, |mut gravity: ResMut<Gravity>| {
+            *gravity = Gravity::ZERO;
+        });
     }
 
     fn spawn_camera(mut commands: Commands) {

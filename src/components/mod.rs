@@ -9,3 +9,4 @@ pub mod health;
 /// "_" because of it some kind of "domain"
 /// TODO: Stick up with domains
 pub mod _animovement;
+pub mod fps_counter;

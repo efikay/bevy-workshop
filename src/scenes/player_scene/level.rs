@@ -25,7 +25,7 @@ pub fn spawn_level(mut commands: Commands) {
 
     commands.spawn(creature::CreatureConfig::player());
 
-    let npcs_area = Rect::from_corners(Vec2::new(-200.0, -200.0), Vec2::new(200.0, 200.0));
+    let npcs_area = Rect::from_corners(Vec2::new(-1000.0, -1000.0), Vec2::new(1000.0, 1000.0));
     let npc_chunk = Vec2::new(200.0, 200.0);
 
     for spawn_area in

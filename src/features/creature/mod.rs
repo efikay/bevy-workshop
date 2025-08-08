@@ -3,7 +3,6 @@
 use bevy::prelude::*;
 
 mod config;
-mod markers;
 mod systems;
 
 use crate::{
@@ -13,6 +12,7 @@ use crate::{
 };
 
 pub use config::CreatureConfig;
+pub mod markers;
 
 pub fn plugin(app: &mut App) {
     app.add_plugins(_animovement::plugin);
@@ -23,7 +23,11 @@ pub fn plugin(app: &mut App) {
     app.add_systems(
         Update,
         (
-            systems::record_player_action_input.in_set(AppSystems::RecordInput),
+            (
+                systems::record_player_fireball_input,
+                systems::record_player_fireballs_around_input,
+            )
+                .in_set(AppSystems::RecordInput),
             systems::unpack_creature_configs.in_set(AppSystems::Update),
         )
             .in_set(PausableAppSystems),
