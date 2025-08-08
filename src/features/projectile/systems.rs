@@ -18,6 +18,7 @@ pub fn spawn_event_projectiles(
             from,
             speed,
             intent,
+            damage,
         } = pending_projectile;
 
         let layout = TextureAtlasLayout::from_grid(UVec2::splat(128), 10, 6, None, None);
@@ -25,7 +26,7 @@ pub fn spawn_event_projectiles(
         commands
             .spawn((
                 Name::new("Projectile"),
-                marker::Projectile,
+                component::Projectile { damage: *damage },
                 Animation::new_with_animation_interval(
                     RangeDoubleMapper::new(|_| |_| 0..6),
                     Duration::from_millis(30),
@@ -49,10 +50,12 @@ pub fn spawn_event_projectiles(
                 RigidBody::Kinematic,
                 Collider::rectangle(30.0, 20.0),
                 Sensor,
+                CollisionEventsEnabled,
                 LinearVelocity(
                     // Maximizing the intent for maximum speed mult
                     Vec2::from_angle(intent.to_angle()) * Vec2::splat(*speed),
                 ),
-            ));
+            ))
+            .observe(observer::observe_collision_with_creature);
     }
 }

@@ -3,7 +3,6 @@
 use bevy::prelude::*;
 
 mod config;
-mod markers;
 mod systems;
 
 use crate::{
@@ -13,6 +12,7 @@ use crate::{
 };
 
 pub use config::CreatureConfig;
+pub mod markers;
 
 pub fn plugin(app: &mut App) {
     app.add_plugins(_animovement::plugin);

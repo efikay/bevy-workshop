@@ -6,6 +6,7 @@ pub struct SendProjectile {
     /// Must be non-zero
     pub intent: Vec2,
     pub speed: f32,
+    pub damage: u32,
     // pub place_in: Option<Entity>,
     // pub despawn_after: Option<Duration>,
 }
@@ -16,4 +17,10 @@ impl SendProjectile {
     pub const SLOW: f32 = 30.;
     pub const ITS_OK: f32 = 100.;
     pub const BLAZINGLY_FAST: f32 = 1000.;
+}
+
+// Damage constants for debugging
+impl SendProjectile {
+    pub const D_MINOR: u32 = 20;
+    pub const D_MAJOR: u32 = 100;
 }

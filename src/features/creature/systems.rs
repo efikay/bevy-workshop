@@ -33,6 +33,7 @@ pub fn unpack_creature_configs(
 ) {
     for (config, entity) in configs_query {
         let mut entity_commands = commands.entity(entity);
+
         entity_commands
             .remove::<config::CreatureConfig>()
             .insert((
@@ -51,7 +52,11 @@ pub fn unpack_creature_configs(
                 config.initial_transform,
                 children![healthbar_bundle()],
             ))
-            .insert((RigidBody::Static, Collider::rectangle(16.0, 30.0)))
+            .insert((
+                RigidBody::Dynamic,
+                Mass::ZERO,
+                Collider::rectangle(16.0, 30.0),
+            ))
             .insert_if(CameraTarget, || config.is_camera_target)
             .insert_if(WASD, || config.is_controlled);
 
@@ -90,6 +95,7 @@ pub fn record_player_action_input(
             intent,
             from: transform.clone(),
             speed: SendProjectile::ITS_OK,
+            damage: SendProjectile::D_MINOR,
         });
     }
 }
