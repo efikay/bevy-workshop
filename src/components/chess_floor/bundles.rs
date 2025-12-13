@@ -11,7 +11,6 @@ pub fn make_sprite_bundles(config: ChessFloorConfig) -> Vec<(Sprite, Transform)>
         area,
     } = config;
 
-    // it's definitely possible to fix it in this fn below
     let tile_areas =
         RectExt::from(area).chunk_to_grid_with_cuttings(Vec2::new(tile_size, tile_size));
 
@@ -28,6 +27,8 @@ pub fn make_sprite_bundles(config: ChessFloorConfig) -> Vec<(Sprite, Transform)>
                 white_tile_color
             }
         };
+
+        println!("size {width}x{height} at {}x{}", area.min.x, area.min.y);
 
         children.push((
             Sprite {

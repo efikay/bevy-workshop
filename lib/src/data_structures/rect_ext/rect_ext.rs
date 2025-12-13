@@ -1,3 +1,4 @@
+use avian2d::parry::na::ComplexField;
 use bevy::{math::VectorSpace, prelude::*};
 use ndarray::prelude::*;
 
@@ -39,11 +40,18 @@ impl RectExt {
         }
 
         let min = rect.min;
-        let max = rect.max;
 
         // Calculate number of chunks including partial ones
-        let cols = (rect.width() / chunk_size.x).ceil() as usize;
-        let rows = (rect.height() / chunk_size.y).ceil() as usize;
+        let cols = if include_cuttings {
+            (rect.width() / chunk_size.x).ceil() as usize
+        } else {
+            (rect.width() / chunk_size.x) as usize
+        };
+        let rows = if include_cuttings {
+            (rect.height() / chunk_size.y).ceil() as usize
+        } else {
+            (rect.width() / chunk_size.y) as usize
+        };
 
         Array2::from_shape_fn((rows, cols), |(j, i)| {
             let x = min.x + i as f32 * chunk_size.x;
@@ -53,15 +61,15 @@ impl RectExt {
             let is_last_row = j == rows - 1;
 
             let chunk_width = if include_cuttings && is_last_col {
-                max.x - (i as f32 * chunk_size.x)
+                rect.width() % chunk_size.x
             } else {
-                chunk_size.x.min(rect.width())
+                chunk_size.x
             };
 
             let chunk_height = if include_cuttings && is_last_row {
-                max.y - (j as f32 * chunk_size.y)
+                rect.height() % chunk_size.y
             } else {
-                chunk_size.y.min(rect.height())
+                chunk_size.y
             };
 
             Rect::new(x, y, x + chunk_width, y + chunk_height)
@@ -131,6 +139,18 @@ mod test {
 
         assert_eq!(grid.shape(), [2, 2]);
         assert_eq!(grid, expected);
+    }
+
+    #[test]
+    fn test_lots_of_chunks() {
+        let rect = RectExt::new(-200., -400., 400., 200.);
+        let chunk_size = Vec2::new(20., 20.);
+
+        let chunks = rect.chunk_to_grid(chunk_size);
+
+        for chunk in chunks {
+            assert_eq!(chunk.size(), chunk_size);
+        }
     }
 
     #[test]

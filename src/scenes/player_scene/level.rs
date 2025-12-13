@@ -8,7 +8,7 @@ pub(super) fn plugin(_: &mut App) {
 }
 
 pub fn spawn_level(mut commands: Commands) {
-    let spawn_zone = Rect::from_corners(Vec2::new(-1000.0, -1000.0), Vec2::new(1000.0, 1000.0));
+    let spawn_zone = Rect::from_corners(Vec2::new(-400.0, -400.0), Vec2::new(400.0, 400.0));
 
     for sprite_bundle in
         chess_floor::bundles::make_sprite_bundles(chess_floor::config::ChessFloorConfig {
