@@ -277,13 +277,13 @@ mod test {
 
     #[test]
     fn test_smaller_than_chunk() {
-        ///         |
-        ///         |
-        ///         cc
-        /// --------rc-------
-        ///         |
-        ///         |
-        ///         |
+        //         |
+        //         |
+        //         cc
+        // --------rc-------
+        //         |
+        //         |
+        //         |
         let rect = RectExt::new((0.0, 0.0), (1.0, 1.0));
         let chunk_size = Vec2::new(2.0, 2.0);
 
