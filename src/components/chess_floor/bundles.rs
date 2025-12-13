@@ -18,26 +18,26 @@ pub fn make_sprite_bundles(config: ChessFloorConfig) -> Vec<(Sprite, Transform)>
     let mut children = vec![];
 
     for ((row_idx, col_idx), area) in tile_areas.indexed_iter() {
-        let is_black = (row_idx + col_idx) % 2 == 0;
+        let (width, height) = area.size().into();
+        let tile_color = {
+            let is_black = (row_idx + col_idx) % 2 == 0;
 
-        let xy: Vec2 = area.min();
-        let (width, height) = (area.max() - xy).into();
+            if is_black {
+                black_tile_color
+            } else {
+                white_tile_color
+            }
+        };
 
         children.push((
             Sprite {
-                color: if is_black {
-                    black_tile_color
-                } else {
-                    white_tile_color
-                },
-                // FIXME: looks not quite good with ROW cuttings when anchor set to TopLeft (bug or feature?)
-                anchor: Anchor::BottomLeft,
+                color: tile_color,
                 custom_size: Some(Vec2::new(width, height)),
                 ..default()
             },
             Transform::from_translation(Vec3 {
-                x: xy.x,
-                y: xy.y,
+                x: area.min.x,
+                y: area.min.y,
                 z: ZLevel::Floor.into(),
             }),
         ));
