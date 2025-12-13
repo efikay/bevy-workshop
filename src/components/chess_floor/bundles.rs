@@ -1,12 +1,7 @@
 use bevy::{prelude::*, sprite::Anchor};
+use lib::data_structures::rect_ext::{ChunkToGrid, RectExt};
 
-use crate::{
-    components::chess_floor::config::ChessFloorConfig,
-    shared::{
-        data_structures::{ChunkToGrid as _, PrimitiveRect},
-        z_levels::ZLevel,
-    },
-};
+use crate::{components::chess_floor::config::ChessFloorConfig, shared::z_levels::ZLevel};
 
 pub fn make_sprite_bundles(config: ChessFloorConfig) -> Vec<(Sprite, Transform)> {
     let ChessFloorConfig {
@@ -18,7 +13,7 @@ pub fn make_sprite_bundles(config: ChessFloorConfig) -> Vec<(Sprite, Transform)>
 
     // it's definitely possible to fix it in this fn below
     let tile_areas =
-        PrimitiveRect::from(area).chunk_to_grid_with_cuttings(Vec2::new(tile_size, tile_size));
+        RectExt::from(area).chunk_to_grid_with_cuttings(Vec2::new(tile_size, tile_size));
 
     let mut children = vec![];
 

@@ -1,0 +1,8 @@
+[package]
+name = "lib"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bevy = { version = "0.16.1", features = ["dynamic_linking"] }
+ndarray = "0.16.1"

@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 use bevy_framepace::{FramepaceSettings, Limiter};
-
-use crate::shared::data_structures::RepeatedState;
+use lib::data_structures::repeated_state::RepeatedState;
 
 use super::config::FpsLimiterConfig;
 

@@ -1,6 +1,6 @@
 use bevy::math::Vec2;
 
-use crate::shared::utils::vec2::vec2_to_normalized_degrees;
+use lib::utils::vec2::vec2_to_normalized_degrees;
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Default, Hash)]
 pub enum DirectionSimple {

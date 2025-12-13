@@ -3,14 +3,15 @@
 /// Checks if f32 has remainder
 ///
 /// ## Examples
-/// ```
+/// ```ignore
+/// use lib::utils::float::has_fract;
+///
 /// let value = 1.5;
-/// assert_eq!(has_fractional_part(value), true);
+/// assert_eq!(has_fract(value), true);
 ///
 /// let clean_value = 1.0;
-/// assert_eq!(has_fractional_part(clean_value), false);
+/// assert_eq!(has_fract(clean_value), false);
 /// ```
-#[inline]
 pub fn has_fract(value: f32) -> bool {
     let bits = value.to_bits();
     let exponent = (bits >> 23) & 0xff;

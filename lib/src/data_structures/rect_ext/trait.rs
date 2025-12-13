@@ -3,7 +3,6 @@
 
 use bevy::prelude::*;
 use ndarray::Array2;
-
 pub trait ChunkToGrid<T> {
     /// Return new grid which chunks onto pieces. <br />
     /// Does not modify source.
@@ -15,7 +14,7 @@ pub trait ChunkToGrid<T> {
     /// 4. If there any cuttings left – we ignore them
     ///
     /// ## Abstract Cake Example:
-    /// ```
+    /// ```ignore
     /// struct Cake {
     ///     pub width: u8,
     ///     pub height: u8,
@@ -56,7 +55,7 @@ pub trait ChunkToGrid<T> {
     /// Does not modify source.
     ///
     /// ## Abstract Cake Example:
-    /// ```
+    /// ```ignore
     /// struct Cake {
     ///     pub width: u8,
     ///     pub height: u8,

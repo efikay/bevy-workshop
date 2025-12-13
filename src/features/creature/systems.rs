@@ -15,7 +15,6 @@ use crate::features;
 use crate::features::creature::config;
 use crate::features::projectile::events::{SendProjectile, SendProjectilesAround};
 use crate::shared::common_markers::WASD;
-use crate::shared::data_structures::{ChunkToGrid, PrimitiveRect};
 use crate::shared::z_levels::ZLevel;
 
 /// Searches for bundles with [`CreatureConfig`]-s and "unpacks" them into

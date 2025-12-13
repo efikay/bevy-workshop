@@ -2,7 +2,7 @@
 
 use bevy::{math::Vec2, reflect::Reflect};
 
-use crate::shared::utils::vec2::vec2_to_normalized_degrees;
+use lib::utils::vec2::vec2_to_normalized_degrees;
 
 use super::DirectionSimple;
 
@@ -56,6 +56,8 @@ impl DirectionAdvanced {
     }
 
     pub fn to_max_intent(&self) -> Vec2 {
+
+
         match self  {
             DirectionAdvanced::North => Vec2::new(0.0, 1.0),
             DirectionAdvanced::East => Vec2::new(1.0, 0.0),

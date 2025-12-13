@@ -1,8 +1,8 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
+use lib::data_structures::range_double_mapper::RangeDoubleMapper;
 
-use crate::shared::data_structures::RangeDoubleMapper;
 use crate::shared::direction::DirectionAdvanced;
 
 use super::animation_state::AnimationState;

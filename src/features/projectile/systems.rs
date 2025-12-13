@@ -2,11 +2,9 @@ use std::time::Duration;
 
 use avian2d::prelude::*;
 use bevy::prelude::*;
+use lib::{data_structures::range_double_mapper::RangeDoubleMapper, utils::radian};
 
-use crate::{
-    components::_animovement::Animation,
-    shared::{data_structures::RangeDoubleMapper, utils::radian},
-};
+use crate::components::_animovement::Animation;
 
 use super::*;
 

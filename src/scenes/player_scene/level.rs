@@ -4,8 +4,8 @@ use crate::{
     // components::chess_floor,
     features::creature,
     screens::ScreenState,
-    shared::data_structures::{ChunkToGrid, PrimitiveRect},
 };
+use lib::data_structures::rect_ext::{ChunkToGrid, RectExt};
 
 pub(super) fn plugin(_: &mut App) {
     //
@@ -29,7 +29,7 @@ pub fn spawn_level(mut commands: Commands) {
     let npc_chunk = Vec2::new(200.0, 200.0);
 
     for spawn_area in
-        PrimitiveRect::new(npcs_area.min.into(), npcs_area.max.into()).chunk_to_grid(npc_chunk)
+        RectExt::new(npcs_area.min.into(), npcs_area.max.into()).chunk_to_grid(npc_chunk)
     {
         let center = spawn_area.max() - (npc_chunk / 2.0);
 

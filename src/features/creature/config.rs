@@ -2,11 +2,11 @@ use std::ops::Range;
 
 use bevy::image::TextureAtlasLayout;
 use bevy::prelude::*;
+use lib::data_structures::range_double_mapper::RangeDoubleMapper;
 
 use crate::{
     components::_animovement::AnimationState,
     shared::{
-        data_structures::RangeDoubleMapper,
         direction::{DirectionAdvanced, DirectionSimple},
         z_levels::ZLevel,
     },
