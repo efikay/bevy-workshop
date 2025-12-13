@@ -88,7 +88,8 @@ inspector = [
   # "inspector__world",
   "inspector__health",
 ]
-dev = [
+default = ["dev_native"]
+dev_tools = [ # Dev tools
   "bevy/bevy_dev_tools",
   "bevy/bevy_ui_debug",
   # Improve error messages coming from Bevy
@@ -96,14 +97,14 @@ dev = [
   # bevy_inspector_egui usage
   "inspector",
 ]
-default = ["dev_native"]
-dev_native = [
-  "dev",
+dev_native = [ # Dev tools + hot reload
+  "dev_tools",
   # Enable asset hot reloading for native dev builds.
   "bevy/file_watcher",
   # Enable embedded asset hot reloading for native dev builds.
   "bevy/embedded_watcher",
 ]
+
 
 [lints.rust]
 # Mark `bevy_lint` as a valid `cfg`, as it is set when the Bevy linter runs.
@@ -134,9 +135,8 @@ nonstandard_macro_braces = "warn"
 # Compile with Performance Optimizations:
 # <https://bevyengine.org/learn/quick-start/getting-started/setup/#compile-with-performance-optimizations>
 
-# Enable a small amount of optimization in the dev profile.
 [profile.dev]
-opt-level = 1
+opt-level = 1 # Enable a small amount of optimization in the dev profile.
 
 # Enable a large amount of optimization in the dev profile for dependencies.
 [profile.dev.package."*"]

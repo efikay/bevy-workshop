@@ -8,7 +8,7 @@ use crate::{
 };
 
 mod base_plugins;
-#[cfg(feature = "dev")]
+#[cfg(feature = "dev_tools")]
 mod dev_tools;
 
 pub struct AppPlugin;
@@ -16,7 +16,7 @@ impl Plugin for AppPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(base_plugins::BasePlugins);
 
-        #[cfg(feature = "dev")]
+        #[cfg(feature = "dev_tools")]
         app.add_plugins(dev_tools::plugin);
 
         app.add_plugins((
